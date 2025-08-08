@@ -9,6 +9,8 @@ export class PageLogin{
     readonly linkSignUp: Locator;
     readonly buttonCreateAccount: Locator;
     readonly messageLoginSuccessfull: string;
+    readonly messageLoginFails: string;
+ 
 
 
     constructor(page: Page){
@@ -19,6 +21,7 @@ export class PageLogin{
         this.linkSignUp = page.getByTestId('link-registrarse-login');
         this.buttonCreateAccount = page.getByTestId('boton-signup-header');
         this.messageLoginSuccessfull = "Inicio de sesión exitoso";
+        this.messageLoginFails = "Invalid credentials";
     }
 
     async visitLoginPage(){
@@ -41,13 +44,35 @@ export class PageLogin{
     }
 
     async loginAndRedirectionToDashboardPage(email: string, password: string){
-        await this.visitLoginPage(); // <- ¡esto es lo que faltaba!
+        await this.visitLoginPage(); 
         await this.completeLoginForm(email, password);
         await this.clickLoginButton();
         await expect(this.page.getByText(this.messageLoginSuccessfull)).toBeVisible();
         await this.page.waitForURL('http://localhost:3000/dashboard');
+        await expect(this.page).toHaveURL('http://localhost:3000/dashboard');
 
         const pageDashboard = new PageDashboard(this.page);
         await expect(pageDashboard.dashboardTitle).toBeVisible();
     }
+
+    async loginFailsIntroducingWrongPassword(email: string, password: string){
+        await this.completeLoginForm(email,password);
+        await this.clickLoginButton();
+        await expect (this.page.getByText(this.messageLoginFails)).toBeVisible();
+}
+
+    async submitEmptyLoginFormShouldFail(){
+        await this.clickLoginButton();
+        await expect(this.page).toHaveURL('http://localhost:3000/login');
+    }
+
+    async navigationFailsWhenUserIsLoggedout(email: string, password: string) {
+
+        await this.loginAndRedirectionToDashboardPage(email, password);
+        const pageDashboard = new PageDashboard(this.page);
+        await pageDashboard.logout();
+        await this.page.goto('http://localhost:3000/dashboard');
+        await expect(this.page).toHaveURL('http://localhost:3000/login');
+}
+
 }
