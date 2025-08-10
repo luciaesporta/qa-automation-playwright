@@ -7,13 +7,17 @@ let pageLogin: PageLogin;
 let pageDashboard: PageDashboard;
 let modalCreateBankAccount: ModalCreateBankAccount;
 
-test('TC5 - Verify user can create a bank account correctly', async ({ page }) => {
+test.beforeEach(async ({page}) => {
   pageLogin = new PageLogin(page);
   pageDashboard = new PageDashboard(page);
   modalCreateBankAccount = new ModalCreateBankAccount(page);
   await pageLogin.visitLoginPage();
-  await pageLogin.loginSuccessfully("luciaalvarezesporta@gmail.com", "12345678");
   await page.waitForURL('http://localhost:3000/dashboard');
+});
+
+
+test('TC5 - Verify user can create a bank account correctly', async ({ page }) => {
+  await pageLogin.loginSuccessfully("luciaalvarezesporta@gmail.com", "12345678");
   await pageDashboard.buttonAddAccount.click();
   await modalCreateBankAccount.typeOfAccountCombobox.click();
   await modalCreateBankAccount.optionDebit.click();
