@@ -30,7 +30,7 @@ test('TC3 - User is redirected to login flow once the account is created', async
 });
 
 test('TC10 - Sign up successfully via API', async ({ request }) => {
-  const email = (TestData.validUser.email.split('@'))[0] + Math.floor(Math.random() * 1000) + '@' + (TestData.validUser.email.split('@')[1]) 
+  const email = (TestData.validUser.email.split('@'))[0] + Math.floor(Math.random() * 1000) + '@' + (TestData.validUser.email.split('@')[1]); 
   const response = await request.post('http://localhost:6007/api/auth/signup', {
     headers: { 'Content-Type': 'application/json' },
     data: {
@@ -53,5 +53,65 @@ test('TC10 - Sign up successfully via API', async ({ request }) => {
       firstName: 'Lucía',
       lastName: 'Esporta',
       email: email,
-    }))
+    }));
+});
+
+
+test('TC11 - Sign up successfully verifying API response', async ({ page }) => {
+  const email =
+    TestData.validUser.email.split('@')[0] +
+    Math.floor(Math.random() * 1000) +
+    '@' +
+    TestData.validUser.email.split('@')[1];
+
+  await test.step('Complete sign up form', async () => {
+    await pageSignUp.signUpUser(
+      TestData.validUser.firstName,
+      TestData.validUser.lastName,
+      email,
+      TestData.validUser.password
+    );
+  });
+
+  const messageCreationAccountAPI = page.waitForResponse('**/api/auth/signup');
+
+  const response = await messageCreationAccountAPI;
+  const responseBody = await response.json();
+
+  expect(response.status()).toBe(201);
+  expect(responseBody).toHaveProperty('token');
+  expect(typeof responseBody.token).toBe('string');
+  expect(responseBody).toHaveProperty('user');
+  expect(responseBody.user).toEqual(
+    expect.objectContaining({
+      id: expect.any(String),
+      firstName: TestData.validUser.firstName,
+      lastName: TestData.validUser.lastName,
+      email
+    }));
+
+  await expect(page.getByText(pageSignUp.messageCreationAccount)).toBeVisible();
+})
+
+test('TC12 - Sign up: handles 409 (email already in use) without navigation', async ({ page }) => {
+const email =
+    TestData.validUser.email.split('@')[0] +
+    Math.floor(Math.random() * 1000) +
+    '@' +
+    TestData.validUser.email.split('@')[1];
+   
+  await page.route('**/api/auth/signup', route => {
+  route.fulfill({
+    status: 409,
+    contentType: 'application/json',
+    body: JSON.stringify ({message: 'Email already in use'})
   })
+  })
+
+  await pageSignUp.signUpUser(
+      TestData.validUser.firstName,
+      TestData.validUser.lastName,
+      email,
+      TestData.validUser.password
+    );
+})
