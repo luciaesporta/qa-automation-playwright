@@ -61,10 +61,23 @@ export class PageLogin{
         await expect (this.page.getByText(this.messageLoginFails)).toBeVisible();
 }
 
-    async submitEmptyLoginFormShouldFail(){
+    async submitEmptyEmailLoginFormShouldFail(password: string){
+        await this.passwordInput.fill(password);
         await this.clickLoginButton();
+        const emailInput = this.emailInput;
+        await expect(emailInput).toBeEmpty();
+        await expect(emailInput).toHaveJSProperty('validationMessage', 'Please fill out this field.');
         await expect(this.page).toHaveURL('http://localhost:3000/login');
-    }
+}
+//TC9
+    async submitIncorrectEmailFormatLoginFormShouldFail(email: string, password: string){
+        await this.emailInput.fill(email);
+        await this.passwordInput.fill(password);
+        await this.clickLoginButton();
+        const emailInput = this.emailInput;
+        const message = await emailInput.evaluate((el) => (el as HTMLInputElement).validationMessage);
+        expect(message).toContain("Please include an '@' in the email address");
+}
 
     async navigationFailsWhenUserIsLoggedout(email: string, password: string) {
 
