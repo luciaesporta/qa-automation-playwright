@@ -1,5 +1,6 @@
 import {Page, Locator, expect} from '@playwright/test';
 import { PageDashboard } from './pageDashboard';
+import { Routes } from '../support/routes';
 
 export class PageLogin{
     readonly page: Page;
@@ -25,7 +26,7 @@ export class PageLogin{
     }
 
     async visitLoginPage(){
-        await this.page.goto('http://localhost:3000/login');
+        await this.page.goto(Routes.login);
         await this.page.waitForLoadState('domcontentloaded');
     }
    
@@ -48,8 +49,8 @@ export class PageLogin{
         await this.completeLoginForm(email, password);
         await this.clickLoginButton();
         await expect(this.page.getByText(this.messageLoginSuccessfull)).toBeVisible();
-        await this.page.waitForURL('http://localhost:3000/dashboard');
-        await expect(this.page).toHaveURL('http://localhost:3000/dashboard');
+        await this.page.waitForURL(Routes.dashboard);
+        await expect(this.page).toHaveURL(Routes.dashboard);
 
         const pageDashboard = new PageDashboard(this.page);
         await expect(pageDashboard.dashboardTitle).toBeVisible();
@@ -67,7 +68,7 @@ export class PageLogin{
         const emailInput = this.emailInput;
         await expect(emailInput).toBeEmpty();
         await expect(emailInput).toHaveJSProperty('validationMessage', 'Please fill out this field.');
-        await expect(this.page).toHaveURL('http://localhost:3000/login');
+        await expect(this.page).toHaveURL(Routes.login);
 }
 //TC9
     async submitIncorrectEmailFormatLoginFormShouldFail(email: string, password: string){
@@ -84,8 +85,8 @@ export class PageLogin{
         await this.loginAndRedirectionToDashboardPage(email, password);
         const pageDashboard = new PageDashboard(this.page);
         await pageDashboard.logout();
-        await this.page.goto('http://localhost:3000/dashboard');
-        await expect(this.page).toHaveURL('http://localhost:3000/login');
+        await this.page.goto(Routes.login);
+        await expect(this.page).toHaveURL(Routes.login);
 }
 
 }

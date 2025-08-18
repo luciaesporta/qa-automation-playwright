@@ -1,4 +1,5 @@
 import {Page, Locator, expect} from '@playwright/test';
+import { Routes } from '../support/routes';
 
 export class PageDashboard {
     readonly page: Page;
@@ -14,7 +15,7 @@ export class PageDashboard {
     }
 
     async visitDashboardPage(){
-        await this.page.goto('http://localhost:3000/dashboard');
+        await this.page.goto(Routes.dashboard);
         await this.page.waitForLoadState('domcontentloaded');
     }
 

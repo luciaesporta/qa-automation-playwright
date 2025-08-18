@@ -1,4 +1,5 @@
 import {Page, Locator} from '@playwright/test';
+import { Routes } from '../support/routes';
 
 export class PageSignUp{
     readonly page: Page;
@@ -23,8 +24,8 @@ export class PageSignUp{
     }
    
     async visitSignUpPage() {
-        await this.page.goto('http://localhost:3000/signup');
-}
+        await this.page.goto(Routes.signup);
+    }
 
     async completeSignUpForm(name: string, lastName: string, email: string, password: string){
         await this.nameInput.fill(name);

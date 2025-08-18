@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PageSignUp } from '../pages/pageSignUp';
 import TestData from '../data/testData.json';
+import { Routes } from '../support/routes';
 let pageSignUp: PageSignUp;
 
 test.beforeEach(async ({ page }) => {
@@ -9,23 +10,26 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('TC1 - Sign up successfully', async ({ page }) => {
-  const randomEmail = 'luciaalvarezesporta' + Math.floor(Math.random() * 1000) + '@gmail.com';
-  await pageSignUp.signUpUser('Lucía', 'Esporta', randomEmail, 'password123');
+  
+  const [user, domain] = TestData.validUser.email.split('@');
+  const randomEmail = `${user}${Math.floor(Math.random() * 1000)}@${domain}`;
+  await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, randomEmail, TestData.validUser.password);
   await expect(page.getByText(pageSignUp.messageCreationAccount)).toBeVisible();
   await page.waitForTimeout(5000);
 });
 
 test('TC2 -  Sign up fails due to email already registered', async ({ page }) => {
-  await pageSignUp.signUpUser('Lucía', 'Esporta', 'luciaalvarezesporta@gmail.com', 'password123');
+  await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, TestData.validUser.email, TestData.validUser.password);
   await expect(page.getByText(pageSignUp.messageEmailAlreadyUsed)).toBeVisible();
   await page.waitForTimeout(5000);
 });
 
 test('TC3 - User is redirected to login flow once the account is created', async ({ page }) => {
-  const randomEmail = 'luciaalvarezesporta' + Math.floor(Math.random() * 1000) + '@gmail.com';
-  await pageSignUp.signUpUser('Lucía', 'Esporta', randomEmail, 'password123');
+  const [user, domain] = TestData.validUser.email.split('@');
+  const randomEmail = `${user}${Math.floor(Math.random() * 1000)}@${domain}`;
+  await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, randomEmail, TestData.validUser.password);
   await expect(page.getByText(pageSignUp.messageCreationAccount)).toBeVisible();
-  await page.waitForURL('http://localhost:3000/login');
+  await page.waitForURL(Routes.login);
   await page.waitForTimeout(5000);
 });
 
