@@ -4,6 +4,19 @@
   "lastName": "Esporta",
   "email": "luciaalvarezesporta@gmail.com",
   "password": "12345678"
-}
+},
 
+"senderMoney": {
+  "firstName": "Money",
+  "lastName": "Sender",
+  "email": "luciaalvarezesporta+moneysender@gmail.com",
+  "password": "12345678"
+},
+
+"receiverMoney": {
+  "firstName": "Money",
+  "lastName": "Receiver",
+  "email": "luciaalvarezesporta+moneyreceiver@gmail.com",
+  "password": "12345678"
+}
 }

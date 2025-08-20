@@ -1,4 +1,3 @@
-// playwright.config.ts
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
@@ -8,7 +7,21 @@ export default defineConfig({
     baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
     trace: 'on-first-retry',
   },
+
+  testMatch: /.*\.(spec|test)\.(ts|js|mjs)/,
+
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
+
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testIgnore: /.*\.setup\.ts/,
+      dependencies: ['setup'],
+  
+    },
   ],
 });

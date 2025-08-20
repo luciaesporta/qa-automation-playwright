@@ -10,7 +10,6 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('TC1 - Sign up successfully', async ({ page }) => {
-  
   const [user, domain] = TestData.validUser.email.split('@');
   const randomEmail = `${user}${Math.floor(Math.random() * 1000)}@${domain}`;
   await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, randomEmail, TestData.validUser.password);
