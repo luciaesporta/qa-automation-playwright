@@ -56,7 +56,7 @@ jobs:
         run: |
           cd app/frontend
           npm install
-          env: ${{ env.VITE_API_URL }}"
+          env: ${{ env.VITE_API_URL }}
 
       - name: Wait for frontend
         run: wait-on http://localhost:3000
