@@ -5,7 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-        
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -56,7 +56,13 @@ jobs:
         run: |
           cd app/frontend
           npm install
-          env: ${{ env.VITE_API_URL }}
+        env:
+          VITE_API_URL: ${{ env.VITE_API_URL }}
+
+      - name: Run the frontend
+        run: |
+          cd app/frontend
+          npm run dev > frontend.log 2>&1 &
 
       - name: Wait for frontend
         run: wait-on http://localhost:3000
