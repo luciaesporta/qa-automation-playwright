@@ -8,6 +8,8 @@ export class PageDashboard {
     readonly buttonLogOut: Locator;
     readonly buttonSendMoney: Locator;
     readonly receivedTransferEmailRow: Locator;
+    readonly elementsTransferList: Locator;
+    readonly elementsTransactionsAmounts: Locator;
 
     constructor(page: Page){
         this.page = page;
@@ -16,6 +18,8 @@ export class PageDashboard {
         this.buttonLogOut = page.getByTestId('boton-logout');
         this.buttonSendMoney = this.page.getByTestId('boton-enviar');
         this.receivedTransferEmailRow = this.page.getByText('Transferencia de ', { exact: false });
+        this.elementsTransferList = this.page.locator('[data-testid="descripcion-transaccion"]'); 
+        this.elementsTransactionsAmounts = this.page.locator('[data-testid="monto-transaccion"]');
     }
 
     async visitDashboardPage(){
