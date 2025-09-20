@@ -73,7 +73,6 @@ jobs:
           npm install
           npx playwright install --with-deps
 
-          # Generar storage files si no existen
           mkdir -p playwright
           if [ ! -f playwright/.senderMoneyUser.json ]; then
             echo '{"cookies":[],"origins":[]}' > playwright/.senderMoneyUser.json
@@ -82,8 +81,10 @@ jobs:
             echo '{"cookies":[],"origins":[]}' > playwright/.receiverMoneyUser.json
           fi
 
-          # Correr tests
           npx playwright test --reporter=html
+
+          env:
+          BASE_URL: http://localhost:3000
 
       - name: Save reports as artifacts
         if: always()
