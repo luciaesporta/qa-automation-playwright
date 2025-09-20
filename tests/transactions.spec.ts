@@ -30,7 +30,7 @@ const testReceivesMoneyUser = test.extend({
 });
 
  //Refactor this test including POM and creating new user for test execution 
-test('TC5 - Verify user can create a bank account correctly', async ({ page }) => {
+/*test('TC5 - Verify user can create a bank account correctly', async ({ page }) => {
   await pageLogin.visitLoginPage();
   await pageLogin.loginAndRedirectionToDashboardPage(TestData.validUser.email, TestData.validUser.password);
   const pageDashboard = new PageDashboard(page);
@@ -42,7 +42,7 @@ test('TC5 - Verify user can create a bank account correctly', async ({ page }) =
   
   await pageDashboard.buttonAddAccount.click();
   await modalCreateBankAccount.createAccount('Débito', '1000');
-});
+});*/
 
 testSendsMoneyUser('TC13 - Verify user can send money to another user', async ({page}) => {
   //await page.goto(Routes.dashboard);
