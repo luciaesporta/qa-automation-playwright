@@ -71,7 +71,6 @@ jobs:
         env:
           BASE_URL: http://localhost:3000
         run: |
-          cd tests
           npm install
           npx playwright install --with-deps
 
@@ -83,6 +82,7 @@ jobs:
             echo '{"cookies":[],"origins":[]}' > playwright/.receiverMoneyUser.json
           fi
 
+          echo "Running tests with BASE_URL: $BASE_URL"
           npx playwright test --reporter=html
 
       - name: Save reports as artifacts
