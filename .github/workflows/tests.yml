@@ -68,6 +68,8 @@ jobs:
         run: wait-on http://localhost:3000
 
       - name: Install and run tests
+        env:
+          BASE_URL: http://localhost:3000
         run: |
           cd tests
           npm install
@@ -82,7 +84,6 @@ jobs:
           fi
 
           npx playwright test --reporter=html
-          
 
       - name: Save reports as artifacts
         if: always()
