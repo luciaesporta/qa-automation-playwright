@@ -82,9 +82,7 @@ jobs:
           fi
 
           npx playwright test --reporter=html
-
-          env:
-          BASE_URL: http://localhost:3000
+          
 
       - name: Save reports as artifacts
         if: always()
