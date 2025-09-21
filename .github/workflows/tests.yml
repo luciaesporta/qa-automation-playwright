@@ -1,4 +1,4 @@
-name: Tests Athena Bank Fintech
+name: Playwright E2E Tests - Athena Bank
 
 on: 
   push:
@@ -71,7 +71,7 @@ jobs:
       - name: Wait for frontend
         run: wait-on http://localhost:3000
 
-      - name: Install and run tests
+      - name: Install Playwright and run E2E tests
         env:
           BASE_URL: http://localhost:3000
         run: |
@@ -96,7 +96,7 @@ jobs:
           name: playwright-report
           path: ./playwright-report
 
-      - name: Deploy reports to github pages
+      - name: Deploy test reports to GitHub Pages
         if: always()
         run: |
           git config --global user.name "github-actions[bot]"
@@ -112,7 +112,7 @@ jobs:
           mkdir report-${GITHUB_RUN_NUMBER}
           cp -r $GITHUB_WORKSPACE/playwright-report/* ./report-${GITHUB_RUN_NUMBER}
           git add .
-          git commit -m "Playwright report - Build $GITHUB_RUN_NUMBER"
+          git commit -m "test: Playwright test report for commit ${{ github.sha }} - Run #${{ github.run_number }}"
           git push origin gh-pages
 
       - name: Print link in console
