@@ -44,20 +44,5 @@ test('TC5 - Sign up successfully verifying API response', async ({ page }) => {
 });
 
 test('TC6 - Sign up: handles 409 (email already in use) without navigation', async ({ page }) => {
-  const email = PageSignUp.generateUniqueEmail(TestData.validUser.email);
-   
-  await page.route('**/api/auth/signup', route => {
-  route.fulfill({
-    status: 409,
-    contentType: 'application/json',
-    body: JSON.stringify ({message: 'Email already in use'})
-  })
-  })
-
-  await pageSignUp.signUpUser(
-      TestData.validUser.firstName,
-      TestData.validUser.lastName,
-      email,
-      TestData.validUser.password
-    );
-})
+  await pageSignUp.testSignupWith409Error(TestData.validUser);
+});

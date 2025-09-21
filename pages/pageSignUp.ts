@@ -1,5 +1,5 @@
 import {Page, Locator, APIRequestContext, expect} from '@playwright/test';
-import { Routes } from '../support/routes';
+import { Routes, ApiRoutes } from '../support/routes';
 
 export class PageSignUp{
     readonly page: Page;
@@ -22,7 +22,7 @@ export class PageSignUp{
         this.buttonSignUp = page.getByTestId('boton-registrarse'); 
         this.messageCreationAccount = 'Registro exitoso!';
         this.messageEmailAlreadyUsed = 'Email already in use';
-        this.apiEndpoint = 'http://localhost:6007/api/auth/signup';
+        this.apiEndpoint = `http://localhost:6007${ApiRoutes.signup}`;
     }
    
     async visitSignUpPage() {
@@ -49,7 +49,9 @@ export class PageSignUp{
 
     static generateUniqueEmail(baseEmail: string): string {
         const [user, domain] = baseEmail.split('@');
-        return `${user}${Math.floor(Math.random() * 1000)}@${domain}`;
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 10000);
+        return `${user}${timestamp}${random}@${domain}`;
     }
 
     async signUpUserViaAPI(request: APIRequestContext, userData: {firstName: string, lastName: string, email: string, password: string}) {
@@ -65,10 +67,18 @@ export class PageSignUp{
             },
         });
 
+        console.log(`API Response Status: ${response.status()} for email: ${uniqueEmail}`);
+        
         return { response, uniqueEmail };
     }
 
     async validateSignupAPIResponse(response: any, userData: {firstName: string, lastName: string}, email: string) {
+        if (response.status() !== 201) {
+            const errorBody = await response.text();
+            console.log(`Expected status 201, but got ${response.status()}. Response body: ${errorBody}`);
+            console.log(`Email used: ${email}`);
+        }
+        
         expect(response.status()).toBe(201);
         
         const responseBody = await response.json();
@@ -87,28 +97,31 @@ export class PageSignUp{
         );
     }
 
-    /**
-     * Signs up a user via UI form and verifies both API response and UI message
-     */
     async signUpUserViaUIWithAPIVerification(userData: {firstName: string, lastName: string, email: string, password: string}) {
         const uniqueEmail = PageSignUp.generateUniqueEmail(userData.email);
-        
-        // Wait for API response before submitting the form
-        const apiResponsePromise = this.page.waitForResponse('**/api/auth/signup');
-        
-        // Complete the signup form
+        const apiResponsePromise = this.page.waitForResponse(`**${ApiRoutes.signup}`);
         await this.signUpUser(userData.firstName, userData.lastName, uniqueEmail, userData.password);
-        
-        // Get the API response
         const response = await apiResponsePromise;
-        
-        // Validate API response
         await this.validateSignupAPIResponse(response, userData, uniqueEmail);
-        
-        // Verify UI success message
         await expect(this.page.getByText(this.messageCreationAccount)).toBeVisible();
         
         return { response, uniqueEmail };
+    }
+
+    async testSignupWith409Error(userData: {firstName: string, lastName: string, email: string, password: string}) {
+        const uniqueEmail = PageSignUp.generateUniqueEmail(userData.email);
+        
+        await this.page.route(`**${ApiRoutes.signup}`, route => {
+            route.fulfill({
+                status: 409,
+                contentType: 'application/json',
+                body: JSON.stringify({ message: 'Email already in use' })
+            });
+        });
+
+        await this.signUpUser(userData.firstName, userData.lastName, uniqueEmail, userData.password);
+        
+        return { uniqueEmail };
     }
 }
 

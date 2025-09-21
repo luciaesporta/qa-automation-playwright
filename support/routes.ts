@@ -3,3 +3,8 @@ export const Routes = {
     login: '/login',
     dashboard: '/dashboard',
   };
+
+export const ApiRoutes = {
+    signup: '/api/auth/signup',
+    login: '/api/auth/login',
+  };
