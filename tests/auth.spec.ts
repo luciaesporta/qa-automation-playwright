@@ -28,7 +28,6 @@ test('TC4 - Login fails introducing wrong password', async ({ page }) => {
   await pageAuth.loginFailsIntroducingWrongPassword("luciaalvarezesporta@gmail.com", "wrongpassword");
   await page.pause();
   await page.waitForTimeout(5000);
-
 });
 
 test('TC5 - Login fails when email field is empty', async ({page}) => {

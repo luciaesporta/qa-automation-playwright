@@ -1,5 +1,6 @@
 import {Page, Locator, expect} from '@playwright/test';
 import { Routes } from '../support/routes';
+import { ModalCreateBankAccount } from './modalCreateBankAccount';
 
 export class PageDashboard {
     readonly page: Page;
@@ -31,5 +32,29 @@ export class PageDashboard {
     await this.buttonLogOut.click();
     await this.page.waitForURL(Routes.login);
     await expect(this.page).toHaveURL(Routes.login);
+  }
+
+  async createBankAccount(accountType: string, balance: string): Promise<boolean> {
+    try {
+      await this.page.waitForLoadState('networkidle');
+      const isButtonVisible = await this.buttonAddAccount.isVisible();
+      
+      if (!isButtonVisible) {
+        console.log('Add account button is not visible - user may already have accounts');
+        return false;
+      }
+
+      await this.buttonAddAccount.waitFor({ state: 'visible' });
+      await this.page.waitForTimeout(1000);
+      await this.buttonAddAccount.click();
+
+      const modalCreateBankAccount = new ModalCreateBankAccount(this.page);
+      await modalCreateBankAccount.createAccount(accountType, balance);
+      
+      return true;
+    } catch (error) {
+      console.log('Error creating bank account:', error);
+      return false;
+    }
   }
    }

@@ -15,6 +15,7 @@ let modalCreateBankAccount: ModalCreateBankAccount;
 const senderMoneyUserAuthFile = 'playwright/.senderMoneyUser.json'
 const receiverMoneyUserAuthFile = 'playwright/.receiverMoneyUser.json'
 const userSentDataFile = 'playwright/.senderMoneyUser.data.json'
+const newUserWithBankAccountAuthFile = 'playwright/.newUserWithBankAccount.json'
 
 setup.beforeEach(async ({ page }) => {
   pageAuth = new PageAuth(page);
@@ -37,5 +38,22 @@ setup ('Creates user via API and sends money', async ({page, request}) => {
   setup ('Money receiver logs in successfully', async ({page}) => {
     await pageAuth.loginSuccessfully(TestData.receiverMoney.email, TestData.receiverMoney.password);
     await page.context().storageState({path: receiverMoneyUserAuthFile});
+  });
+
+  setup ('Creates new user with bank account for testing', async ({page, request}) => {
+    const newUser = await BackendUtils.createUserViaAPI(request, TestData.validUser);
+    
+    await pageAuth.loginSuccessfully(newUser.email, newUser.password);
+    
+    // Try to create a bank account if possible
+    const accountCreated = await pageDashboard.createBankAccountIfPossible('Débito', '1000');
+    
+    if (accountCreated) {
+      console.log('Bank account created successfully for new user');
+    } else {
+      console.log('Bank account creation skipped - button not visible');
+    }
+    
+    await page.context().storageState({path: newUserWithBankAccountAuthFile});
   });
 

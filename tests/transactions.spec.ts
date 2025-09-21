@@ -29,20 +29,16 @@ const testReceivesMoneyUser = test.extend({
   storageState: 'playwright/.receiverMoneyUser.json',
 });
 
- //Refactor this test including POM and creating new user for test execution 
-/*test('TC5 - Verify user can create a bank account correctly', async ({ page }) => {
-  await pageLogin.visitLoginPage();
-  await pageLogin.loginAndRedirectionToDashboardPage(TestData.validUser.email, TestData.validUser.password);
+const testNewUserWithBankAccount = test.extend({
+  storageState: 'playwright/.newUserWithBankAccount.json',
+});
+
+testNewUserWithBankAccount('TC5 - Verify user can create a bank account correctly', async ({ page }) => {
   const pageDashboard = new PageDashboard(page);
-  
-  await page.waitForLoadState('networkidle');
-  
-  await pageDashboard.buttonAddAccount.waitFor({ state: 'visible' });
-  await page.waitForTimeout(1000);
-  
-  await pageDashboard.buttonAddAccount.click();
-  await modalCreateBankAccount.createAccount('Débito', '1000');
-});*/
+  await expect(pageDashboard.dashboardTitle).toBeVisible({ timeout: 5000 });
+  const accountCreated = await pageDashboard.createBankAccount('Débito', '1000');
+  expect(accountCreated).toBe(true);
+});
 
 testSendsMoneyUser('TC13 - Verify user can send money to another user', async ({page}) => {
   //await page.goto(Routes.dashboard);
