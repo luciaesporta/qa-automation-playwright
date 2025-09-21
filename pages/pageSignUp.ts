@@ -1,4 +1,4 @@
-import {Page, Locator} from '@playwright/test';
+import {Page, Locator, APIRequestContext, expect} from '@playwright/test';
 import { Routes } from '../support/routes';
 
 export class PageSignUp{
@@ -11,6 +11,7 @@ export class PageSignUp{
     readonly buttonLogIn: Locator;
     readonly messageCreationAccount: string;
     readonly messageEmailAlreadyUsed: string;
+    readonly apiEndpoint: string;
 
     constructor(page: Page){
         this.page = page;
@@ -21,6 +22,7 @@ export class PageSignUp{
         this.buttonSignUp = page.getByTestId('boton-registrarse'); 
         this.messageCreationAccount = 'Registro exitoso!';
         this.messageEmailAlreadyUsed = 'Email already in use';
+        this.apiEndpoint = 'http://localhost:6007/api/auth/signup';
     }
    
     async visitSignUpPage() {
@@ -43,6 +45,44 @@ export class PageSignUp{
     await this.clickSignUpButton();
 }
 
+    static generateUniqueEmail(baseEmail: string): string {
+        const [user, domain] = baseEmail.split('@');
+        return `${user}${Math.floor(Math.random() * 1000)}@${domain}`;
+    }
 
+    async signUpUserViaAPI(request: APIRequestContext, userData: {firstName: string, lastName: string, email: string, password: string}) {
+        const uniqueEmail = PageSignUp.generateUniqueEmail(userData.email);
+        
+        const response = await request.post(this.apiEndpoint, {
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: uniqueEmail,
+                password: userData.password,
+            },
+        });
+
+        return { response, uniqueEmail };
+    }
+
+    async validateSignupAPIResponse(response: any, userData: {firstName: string, lastName: string}, email: string) {
+        expect(response.status()).toBe(201);
+        
+        const responseBody = await response.json();
+        
+        expect(responseBody).toHaveProperty('token');
+        expect(typeof responseBody.token).toBe('string');
+        expect(responseBody).toHaveProperty('user');
+        
+        expect(responseBody.user).toEqual(
+            expect.objectContaining({
+                id: expect.any(String),
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: email,
+            })
+        );
+    }
 }
 

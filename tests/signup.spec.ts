@@ -9,63 +9,37 @@ test.beforeEach(async ({ page }) => {
   await pageSignUp.visitSignUpPage();
 });
 
-test('TC1 - Sign up successfully', async ({ page }) => {
-  const [user, domain] = TestData.validUser.email.split('@');
-  const randomEmail = `${user}${Math.floor(Math.random() * 1000)}@${domain}`;
+test('TC1 - Sign up successfully via UI', async ({ page }) => {
+  const randomEmail = PageSignUp.generateUniqueEmail(TestData.validUser.email);
   await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, randomEmail, TestData.validUser.password);
   await expect(page.getByText(pageSignUp.messageCreationAccount)).toBeVisible();
   await page.waitForTimeout(5000);
 });
 
-test('TC2 -  Sign up fails due to email already registered', async ({ page }) => {
-  await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, TestData.validUser.email, TestData.validUser.password);
-  await expect(page.getByText(pageSignUp.messageEmailAlreadyUsed)).toBeVisible();
-  await page.waitForTimeout(5000);
+
+test('TC2 - Sign up successfully via API', async ({ request }) => {
+  const { response, uniqueEmail } = await pageSignUp.signUpUserViaAPI(request, TestData.validUser);
+  await pageSignUp.validateSignupAPIResponse(response, TestData.validUser, uniqueEmail);
 });
 
+
 test('TC3 - User is redirected to login flow once the account is created', async ({ page }) => {
-  const [user, domain] = TestData.validUser.email.split('@');
-  const randomEmail = `${user}${Math.floor(Math.random() * 1000)}@${domain}`;
+  const randomEmail = PageSignUp.generateUniqueEmail(TestData.validUser.email);
   await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, randomEmail, TestData.validUser.password);
   await expect(page.getByText(pageSignUp.messageCreationAccount)).toBeVisible();
   await page.waitForURL(Routes.login);
   await page.waitForTimeout(5000);
 });
 
-test('TC10 - Sign up successfully via API', async ({ request }) => {
-  const email = (TestData.validUser.email.split('@'))[0] + Math.floor(Math.random() * 1000) + '@' + (TestData.validUser.email.split('@')[1]); 
-  const response = await request.post('http://localhost:6007/api/auth/signup', {
-    headers: { 'Content-Type': 'application/json' },
-    data: {
-      firstName: TestData.validUser.firstName,
-      lastName: TestData.validUser.lastName,
-      email: email,
-      password: TestData.validUser.password,
-    },
-  });
-
-  const responseBody = await response.json();
-  expect(response.status()).toBe(201);
-  expect(responseBody).toHaveProperty('token');
-  expect(typeof responseBody.token).toBe('string');
-  expect(responseBody).toHaveProperty('user');
-
-  expect(responseBody.user).toEqual(
-    expect.objectContaining({
-      id: expect.any(String), 
-      firstName: 'Lucía',
-      lastName: 'Esporta',
-      email: email,
-    }));
+test('TC4 -  Sign up fails due to email already registered', async ({ page }) => {
+  await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, TestData.validUser.email, TestData.validUser.password);
+  await expect(page.getByText(pageSignUp.messageEmailAlreadyUsed)).toBeVisible();
+  await page.waitForTimeout(5000);
 });
 
 
-test('TC11 - Sign up successfully verifying API response', async ({ page }) => {
-  const email =
-    TestData.validUser.email.split('@')[0] +
-    Math.floor(Math.random() * 1000) +
-    '@' +
-    TestData.validUser.email.split('@')[1];
+test('TC5 - Sign up successfully verifying API response', async ({ page }) => {
+  const email = PageSignUp.generateUniqueEmail(TestData.validUser.email);
 
   await test.step('Complete sign up form', async () => {
     await pageSignUp.signUpUser(
@@ -96,12 +70,8 @@ test('TC11 - Sign up successfully verifying API response', async ({ page }) => {
   await expect(page.getByText(pageSignUp.messageCreationAccount)).toBeVisible();
 })
 
-test('TC12 - Sign up: handles 409 (email already in use) without navigation', async ({ page }) => {
-const email =
-    TestData.validUser.email.split('@')[0] +
-    Math.floor(Math.random() * 1000) +
-    '@' +
-    TestData.validUser.email.split('@')[1];
+test('TC6 - Sign up: handles 409 (email already in use) without navigation', async ({ page }) => {
+  const email = PageSignUp.generateUniqueEmail(TestData.validUser.email);
    
   await page.route('**/api/auth/signup', route => {
   route.fulfill({

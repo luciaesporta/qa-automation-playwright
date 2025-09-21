@@ -23,7 +23,6 @@ setup.beforeEach(async ({ page }) => {
   await pageLogin.visitLoginPage();
 });
 
-//nuevo aca
 setup ('Creates user via API and sends money', async ({page, request}) => {
     const newUser = await BackendUtils.createUserViaAPI(request, TestData.validUser);
 
