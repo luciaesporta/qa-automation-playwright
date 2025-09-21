@@ -40,6 +40,12 @@ jobs:
           echo "PORT=${{ env.PORT }}" >> app/backend/.env
           echo "VITE_API_URL=${{ env.VITE_API_URL }}" >> app/backend/.env
 
+      - name: Clean node_modules and build
+        run: |
+          rm -rf node_modules
+          rm -rf app/backend/dist
+          rm -rf app/frontend/dist
+
       - name: Install backend dependencies
         run: |
           cd app/backend
