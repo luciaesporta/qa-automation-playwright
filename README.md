@@ -252,7 +252,7 @@ The project follows the Page Object Model pattern for maintainable test code:
 
 ### Page Classes
 
-- **`PageLogin`**: Login page interactions and validations
+- **`PageAuth`**: Authentication page interactions and validations
 - **`PageSignUp`**: User registration functionality
 - **`PageDashboard`**: Main application dashboard
 - **`ModalCreateBankAccount`**: Bank account creation modal
@@ -261,12 +261,12 @@ The project follows the Page Object Model pattern for maintainable test code:
 ### Example Usage
 
 ```typescript
-import { PageLogin } from '../pages/pageLogin';
+import { PageAuth } from '../pages/pageAuth';
 
 test('User can login successfully', async ({ page }) => {
-  const pageLogin = new PageLogin(page);
-  await pageLogin.visitLoginPage();
-  await pageLogin.loginAndRedirectionToDashboardPage(
+  const pageAuth = new PageAuth(page);
+  await pageAuth.visitLoginPage();
+  await pageAuth.loginAndRedirectionToDashboardPage(
     "user@example.com", 
     "password123"
   );

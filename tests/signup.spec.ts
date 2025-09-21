@@ -16,12 +16,10 @@ test('TC1 - Sign up successfully via UI', async ({ page }) => {
   await page.waitForTimeout(5000);
 });
 
-
 test('TC2 - Sign up successfully via API', async ({ request }) => {
   const { response, uniqueEmail } = await pageSignUp.signUpUserViaAPI(request, TestData.validUser);
   await pageSignUp.validateSignupAPIResponse(response, TestData.validUser, uniqueEmail);
 });
-
 
 test('TC3 - User is redirected to login flow once the account is created', async ({ page }) => {
   const randomEmail = PageSignUp.generateUniqueEmail(TestData.validUser.email);
@@ -37,7 +35,6 @@ test('TC4 -  Sign up fails due to email already registered', async ({ page }) =>
   await expect(page.getByText(pageSignUp.messageEmailAlreadyUsed)).toBeVisible();
   await page.waitForTimeout(5000);
 });
-
 
 test('TC5 - Sign up successfully verifying API response', async ({ page }) => {
   await pageSignUp.signUpUserViaUIWithAPIVerification(TestData.validUser);

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { PageLogin } from '../pages/pageLogin';
+import { PageAuth } from '../pages/pageAuth';
 import { PageDashboard } from '../pages/pageDashboard';
 import { ModalCreateBankAccount } from '../pages/modalCreateBankAccount';
 import TestData from '../data/testData.json';
@@ -8,13 +8,13 @@ import { Routes } from '../support/routes';
 import { ModalTransferMoney } from '../pages/modalTransferMoney';
 import fs from 'fs/promises';
 
-let pageLogin: PageLogin;
+let pageAuth: PageAuth;
 let pageDashboard: PageDashboard;
 let modalCreateBankAccount: ModalCreateBankAccount;
 let modalTransferMoney: ModalTransferMoney;
 
 test.beforeEach(async ({page}) => {
-  pageLogin = new PageLogin(page);
+  pageAuth = new PageAuth(page);
   pageDashboard = new PageDashboard(page);
   modalCreateBankAccount = new ModalCreateBankAccount(page);
   modalTransferMoney = new ModalTransferMoney(page);

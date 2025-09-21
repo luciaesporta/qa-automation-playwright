@@ -2,7 +2,7 @@ import {Page, Locator, expect} from '@playwright/test';
 import { PageDashboard } from './pageDashboard';
 import { Routes } from '../support/routes';
 
-export class PageLogin{
+export class PageAuth{
     readonly page: Page;
     readonly emailInput: Locator;
     readonly passwordInput: Locator;
