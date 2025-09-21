@@ -44,9 +44,7 @@ setup ('Creates user via API and sends money', async ({page, request}) => {
     const newUser = await BackendUtils.createUserViaAPI(request, TestData.validUser);
     
     await pageAuth.loginSuccessfully(newUser.email, newUser.password);
-    
-    // Try to create a bank account if possible
-    const accountCreated = await pageDashboard.createBankAccountIfPossible('Débito', '1000');
+    const accountCreated = await pageDashboard.createBankAccount('Débito', '1000');
     
     if (accountCreated) {
       console.log('Bank account created successfully for new user');
