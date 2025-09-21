@@ -41,9 +41,11 @@ export class PageSignUp{
 }
 
     async signUpUser(name: string, lastName: string, email: string, password: string){
-    await this.completeSignUpForm(name, lastName, email, password);
-    await this.clickSignUpButton();
-}
+        await this.completeSignUpForm(name, lastName, email, password);
+        await this.clickSignUpButton();
+        
+        await this.page.waitForTimeout(1000);
+    }
 
     static generateUniqueEmail(baseEmail: string): string {
         const [user, domain] = baseEmail.split('@');
@@ -83,6 +85,30 @@ export class PageSignUp{
                 email: email,
             })
         );
+    }
+
+    /**
+     * Signs up a user via UI form and verifies both API response and UI message
+     */
+    async signUpUserViaUIWithAPIVerification(userData: {firstName: string, lastName: string, email: string, password: string}) {
+        const uniqueEmail = PageSignUp.generateUniqueEmail(userData.email);
+        
+        // Wait for API response before submitting the form
+        const apiResponsePromise = this.page.waitForResponse('**/api/auth/signup');
+        
+        // Complete the signup form
+        await this.signUpUser(userData.firstName, userData.lastName, uniqueEmail, userData.password);
+        
+        // Get the API response
+        const response = await apiResponsePromise;
+        
+        // Validate API response
+        await this.validateSignupAPIResponse(response, userData, uniqueEmail);
+        
+        // Verify UI success message
+        await expect(this.page.getByText(this.messageCreationAccount)).toBeVisible();
+        
+        return { response, uniqueEmail };
     }
 }
 
