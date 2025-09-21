@@ -9,6 +9,10 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
     services: 
       mongo:
@@ -101,7 +105,7 @@ jobs:
       - name: Clone branch gh-pages
         run: |
           cd $RUNNER_TEMP
-          git clone --depth=1 --branch=gh-pages https://x-access-token:${{secrets.GH_PAGES_PATH}} gh-pages
+          git clone --depth=1 --branch=gh-pages https://x-access-token:${{ secrets.GH_PAGES_PATH }}@github.com/${{ github.repository }}.git gh-pages
 
           cd gh-pages
           rm -rf ./*
@@ -113,4 +117,4 @@ jobs:
 
       - name: Print link in console
         run: |
-          echo "Report available in: https://${{github.repository_owner}}.github.io/${{github.event.repository.name}}"
+          echo "Report available in: https://${{github.repository_owner}}.github.io/${{github.event.repository.name}}/report-${GITHUB_RUN_NUMBER}/"
