@@ -24,18 +24,17 @@ This project provides automated testing for the Athena Bank Fintech application,
 - **Authentication**: Login, Signup, and session management
 - **Bank Account Management**: Creating and managing bank accounts
 - **Money Transfers**: Sending and receiving money between users
-- **API Testing**: Backend API validation and response verification
+- **API Testing**: Independent backend API validation and response verification (decoupled from frontend)
 
 ## ✨ Features
 
-- 🚀 **Fast & Reliable**: Built with Playwright for cross-browser testing
-- 📱 **Cross-Browser Support**: Chrome, Firefox, Safari, and Edge
 - 🔧 **Page Object Model**: Maintainable and reusable test code
 - 📊 **Comprehensive Reporting**: HTML reports with screenshots and videos
 - 🔄 **CI/CD Integration**: Automated testing on GitHub Actions
 - 📈 **GitHub Pages**: Automated test report deployment
 - 🛠️ **API Testing**: Backend validation alongside UI tests
 - 📝 **Data-Driven Testing**: JSON-based test data management
+- 📱 **Cross-Browser Support**: Chrome, Firefox, Safari, and Edge
 
 ## 📁 Project Structure
 
@@ -330,26 +329,6 @@ export default defineConfig({
 - **`JWT_SECRET`**: JWT token secret for authentication
 - **`PORT`**: Backend server port (default: 6007)
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### 1. Tests Fail with "Cannot navigate to invalid URL"
-- **Solution**: Ensure the application is running on the correct port
-- **Check**: Verify `BASE_URL` environment variable is set correctly
-
-#### 2. MongoDB Connection Issues
-- **Solution**: Ensure MongoDB is running and accessible
-- **Check**: Verify `MONGO_URI` in backend `.env` file
-
-#### 3. Authentication Failures
-- **Solution**: Check test data credentials in `data/testData.json`
-- **Check**: Verify JWT secret is configured correctly
-
-#### 4. CI/CD Pipeline Failures
-- **Solution**: Check GitHub Actions logs for specific errors
-- **Check**: Verify repository secrets are configured correctly
-
 ### Debug Mode
 
 Run tests in debug mode for step-by-step execution:
@@ -357,18 +336,3 @@ Run tests in debug mode for step-by-step execution:
 ```bash
 npx playwright test --debug
 ```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-
-- Follow the existing Page Object Model pattern
-- Add comprehensive test coverage for new features
-- Update test data in `data/testData.json` when needed
-- Ensure all tests pass before submitting PRs
