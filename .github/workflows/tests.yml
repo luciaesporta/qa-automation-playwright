@@ -91,3 +91,26 @@ jobs:
         with: 
           name: playwright-report
           path: ./playwright-report
+
+      - name: Deploy reports to github pages
+        if: always()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Clone branch gh-pages
+        run: |
+          cd $RUNNER_TEMP
+          git clone --depth=1 --branch=gh-pages https://x-access-token:${{secrets.GH_PAGES_PATH}} gh-pages
+
+          cd gh-pages
+          rm -rf ./*
+          mkdir report-${GITHUB_RUN_NUMBER}
+          cp -r $GITHUB_WORKSPACE/playwright-report/* ./report-${GITHUB_RUN_NUMBER}
+          git add .
+          git commit -m "Playwright report - Build $GITHUB_RUN_NUMBER"
+          git push origin gh-pages
+
+      - name: Print link in console
+        run: |
+          echo "Report available in: https://${{github.repository_owner}}.github.io/${{github.event.repository.name}}"
