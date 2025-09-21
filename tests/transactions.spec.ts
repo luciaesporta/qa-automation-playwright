@@ -33,14 +33,14 @@ const testNewUserWithBankAccount = test.extend({
   storageState: 'playwright/.newUserWithBankAccount.json',
 });
 
-testNewUserWithBankAccount('TC5 - Verify user can create a bank account correctly', async ({ page }) => {
+testNewUserWithBankAccount('TC1 - Verify user can create a bank account correctly', async ({ page }) => {
   const pageDashboard = new PageDashboard(page);
   await expect(pageDashboard.dashboardTitle).toBeVisible({ timeout: 5000 });
   const accountCreated = await pageDashboard.createBankAccount('Débito', '1000');
   expect(accountCreated).toBe(true);
 });
 
-testSendsMoneyUser('TC13 - Verify user can send money to another user', async ({page}) => {
+testSendsMoneyUser('TC2 - Verify user can send money to another user', async ({page}) => {
   //await page.goto(Routes.dashboard);
   await expect (pageDashboard.dashboardTitle).toBeVisible({ timeout: 5000 });
   await pageDashboard.buttonSendMoney.click(); 
@@ -48,7 +48,7 @@ testSendsMoneyUser('TC13 - Verify user can send money to another user', async ({
   await page.waitForTimeout(5000);
 });
 
-testReceivesMoneyUser('TC14 - Verify user receives money from another user', async ({page}) => {
+testReceivesMoneyUser('TC3 - Verify user receives money from another user', async ({page}) => {
   await expect (pageDashboard.dashboardTitle).toBeVisible({ timeout: 5000 });
   await expect(pageDashboard.receivedTransferEmailRow.first()).toBeVisible();
   });
