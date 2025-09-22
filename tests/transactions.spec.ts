@@ -3,8 +3,8 @@ import { PageAuth } from '../pages/pageAuth';
 import { PageDashboard } from '../pages/pageDashboard';
 import { ModalCreateBankAccount } from '../pages/modalCreateBankAccount';
 import TestData from '../data/testData.json';
-import { Route } from '@playwright/test';
-import { Routes } from '../support/routes';
+import { ApiUtils } from '../utils/apiUtils';
+import { getUserEmailFromFile, getJwtFromStorage } from '../utils/authUtils';
 import { ModalTransferMoney } from '../pages/modalTransferMoney';
 import fs from 'fs/promises';
 
@@ -41,7 +41,6 @@ testNewUserWithBankAccount('TC1 - Verify user can create a bank account correctl
 });
 
 testSendsMoneyUser('TC2 - Verify user can send money to another user', async ({page}) => {
-  //await page.goto(Routes.dashboard);
   await expect (pageDashboard.dashboardTitle).toBeVisible({ timeout: 5000 });
   await pageDashboard.buttonSendMoney.click(); 
   await modalTransferMoney.completeAndSendMoneyTransfer('luciaalvarezesporta+moneyreceiver@gmail.com', '25')
@@ -53,8 +52,8 @@ testReceivesMoneyUser('TC3 - Verify user receives money from another user', asyn
   await expect(pageDashboard.receivedTransferEmailRow.first()).toBeVisible();
   });
 
-  //Refactor this test including POM and API utils
-  testReceivesMoneyUser('TC15 - Verify money transfer via API', async ({page, request}) => {
+  /*Refactor this test including POM and API utils
+  testReceivesMoneyUser('TC4 - Verify money transfer via API', async ({page, request}) => {
     const userSentDataFile = require.resolve('../playwright/.senderMoneyUser.data.json');
     const dataSentUser = JSON.parse(await fs.readFile(userSentDataFile, 'utf-8'));
     const emailSentUser = dataSentUser.email;
@@ -98,6 +97,26 @@ testReceivesMoneyUser('TC3 - Verify user receives money from another user', asyn
     const amountRegex = new RegExp(String(randomAmount.toFixed(2)))
     await expect(pageDashboard.elementsTransactionsAmounts.first()).toContainText(amountRegex);
     await page.waitForTimeout(5000);
+      });
+      */
+
+      testReceivesMoneyUser('TC4 - Verify money transfer via API', async ({ page, request }) => {
+        const emailSentUser = await getUserEmailFromFile('playwright/.senderMoneyUser.data.json');
+        const jwt = await getJwtFromStorage('playwright/.senderMoneyUser.json');
+      
+        const api = new ApiUtils(request);
+        const accounts = await api.getAccounts(jwt);
+        const idOriginAccount = accounts[0]._id;
+        const randomAmount = Math.floor(Math.random() * 100) + 1;
+    
+        await api.transferMoney(jwt, idOriginAccount, TestData.receiverMoney.email, randomAmount);
+      
+        await page.reload();
+        await page.waitForLoadState('networkidle');
+      
+        await expect(pageDashboard.receivedTransferEmailRow.first()).toBeVisible();
+        await expect(pageDashboard.elementsTransferList.first()).toContainText(emailSentUser);
+        await expect(pageDashboard.elementsTransactionsAmounts.first()).toContainText(new RegExp(String(randomAmount.toFixed(2))));
       });
 
     
