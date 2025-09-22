@@ -57,4 +57,13 @@ export class PageDashboard {
       return false;
     }
   }
+
+  async expectTransferVisible(senderEmail: string, amount: number) {
+    await expect(this.receivedTransferEmailRow.first()).toBeVisible();
+    await expect(this.elementsTransferList.first()).toContainText(senderEmail);
+    await expect(this.elementsTransactionsAmounts.first()).toContainText(
+      new RegExp(String(amount.toFixed(2)))
+    );
+  }
+  
    }

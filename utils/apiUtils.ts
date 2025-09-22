@@ -3,6 +3,7 @@ import { APIRequestContext, expect } from '@playwright/test';
 export class ApiUtils {
   private request: APIRequestContext;
   private baseUrl: string;
+  
 
   constructor(request: APIRequestContext, baseUrl = 'http://localhost:6007/api') {
     this.request = request;
@@ -24,5 +25,12 @@ export class ApiUtils {
     });
     expect(response.ok(), `Transfer API failed: ${response.statusText()}`).toBeTruthy();
     return response.json();
+  }
+
+  async transferMoneyFromFirstAccount(jwt: string, toEmail: string, amount: number) {
+    const accounts = await this.getAccounts(jwt);
+    expect(accounts.length, 'No accounts found').toBeGreaterThan(0);
+    const idOriginAccount = accounts[0]._id;
+    return this.transferMoney(jwt, idOriginAccount, toEmail, amount);
   }
 }

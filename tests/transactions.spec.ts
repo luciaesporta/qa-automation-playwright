@@ -52,72 +52,21 @@ testReceivesMoneyUser('TC3 - Verify user receives money from another user', asyn
   await expect(pageDashboard.receivedTransferEmailRow.first()).toBeVisible();
   });
 
-  /*Refactor this test including POM and API utils
-  testReceivesMoneyUser('TC4 - Verify money transfer via API', async ({page, request}) => {
-    const userSentDataFile = require.resolve('../playwright/.senderMoneyUser.data.json');
-    const dataSentUser = JSON.parse(await fs.readFile(userSentDataFile, 'utf-8'));
-    const emailSentUser = dataSentUser.email;
-    expect (emailSentUser,'Failed to read user email from file.').toBeDefined();
-
-   const userSentAuth = require.resolve('../playwright/.senderMoneyUser.json')
-    const userSentAuthContent = await fs.readFile(userSentAuth, 'utf-8');
-    const dataSentAuthUser = JSON.parse(userSentAuthContent);
-    const jwtSentAuthUser = dataSentAuthUser.origins[0]?.localStorage.find(item => item.name === 'jwt')?.value;
-    expect (jwtSentAuthUser,'The JWT token is not defined.').toBeDefined();
-    const jwt = jwtSentAuthUser;
-    
-    const responseAccounts = await request.get('http://localhost:6007/api/accounts', {
-      headers: {
-        'Authorization': `Bearer ${jwt}`
-      }
-    });
-    expect(responseAccounts.ok(), `Account API is not working: ${responseAccounts.statusText()}`).toBeTruthy();
-    const accounts = await responseAccounts.json();
-    expect(accounts.length, 'No accounts found').toBeGreaterThan(0);
-    const idOriginAccount = accounts[0]._id;
-
+  testReceivesMoneyUser('TC4 - Verify money transfer via API', async ({ page, request }) => {
+    const emailSentUser = await getUserEmailFromFile('playwright/.senderMoneyUser.data.json');
+    const jwt = await getJwtFromStorage('playwright/.senderMoneyUser.json');
+  
+    const api = new ApiUtils(request);
     const randomAmount = Math.floor(Math.random() * 100) + 1;
-    console.log(`Transferring of: $${randomAmount} from account ${idOriginAccount} to ${TestData.receiverMoney.email}`);
- 
-    const responseTransfer = await request.post('http://localhost:6007/api/transactions/transfer', {
-      headers: {
-        'Authorization': `Bearer ${jwt}`
-      },
-      data: {
-        fromAccountId: idOriginAccount,
-        toEmail: TestData.receiverMoney.email,
-        amount: randomAmount
-      }
-    });
-    expect(responseTransfer.ok(), `Transfer API is not working: ${responseTransfer.statusText()}`).toBeTruthy();
+  
+    await api.transferMoneyFromFirstAccount(jwt, TestData.receiverMoney.email, randomAmount);
+  
     await page.reload();
     await page.waitForLoadState('networkidle');
-    await expect(pageDashboard.receivedTransferEmailRow.first()).toBeVisible();
-    await expect(pageDashboard.elementsTransferList.first()).toContainText(emailSentUser);
-    const amountRegex = new RegExp(String(randomAmount.toFixed(2)))
-    await expect(pageDashboard.elementsTransactionsAmounts.first()).toContainText(amountRegex);
-    await page.waitForTimeout(5000);
-      });
-      */
-
-      testReceivesMoneyUser('TC4 - Verify money transfer via API', async ({ page, request }) => {
-        const emailSentUser = await getUserEmailFromFile('playwright/.senderMoneyUser.data.json');
-        const jwt = await getJwtFromStorage('playwright/.senderMoneyUser.json');
-      
-        const api = new ApiUtils(request);
-        const accounts = await api.getAccounts(jwt);
-        const idOriginAccount = accounts[0]._id;
-        const randomAmount = Math.floor(Math.random() * 100) + 1;
-    
-        await api.transferMoney(jwt, idOriginAccount, TestData.receiverMoney.email, randomAmount);
-      
-        await page.reload();
-        await page.waitForLoadState('networkidle');
-      
-        await expect(pageDashboard.receivedTransferEmailRow.first()).toBeVisible();
-        await expect(pageDashboard.elementsTransferList.first()).toContainText(emailSentUser);
-        await expect(pageDashboard.elementsTransactionsAmounts.first()).toContainText(new RegExp(String(randomAmount.toFixed(2))));
-      });
+  
+    await pageDashboard.expectTransferVisible(emailSentUser, randomAmount);
+  });
+  
 
     
 
