@@ -53,11 +53,10 @@ playwright/
 ├── support/                    # Support utilities
 │   └── routes.ts              # Application routes
 ├── tests/                      # Test specifications
-│   ├── auth.spec.ts           # Authentication tests
-│   ├── login.spec.ts          # Login-specific tests
-│   ├── signup.setup.ts        # Test setup and user creation
-│   ├── signup.spec.ts         # Signup tests
-│   └── transactions.spec.ts   # Money transfer tests
+│   ├── auth.spec.ts           # Authentication tests (no setup required)
+│   ├── signup.spec.ts         # Signup tests (no setup required)
+│   ├── transactions.spec.ts   # Money transfer tests
+│   └── transaction.setup.ts   # Setup for transaction tests only
 ├── utils/                      # Utility functions
 │   └── backendUtils.ts        # API testing utilities
 ├── playwright.config.ts       # Playwright configuration
@@ -135,10 +134,34 @@ Ensure both applications are running:
 
 ## 🧪 Running Tests
 
+### Optimized Test Execution
+
+The project uses an optimized configuration that separates tests by type for better performance:
+
+- **Auth Tests**: Run without setup (fast execution)
+- **Signup Tests**: Run without setup (fast execution)  
+- **Transaction Tests**: Run with specific setup (creates test users)
+
 ### Run All Tests
 
 ```bash
 npx playwright test
+```
+
+### Run Tests by Type
+
+```bash
+# Authentication tests (fast, no setup)
+npx playwright test --project=auth-tests
+
+# Signup tests (fast, no setup)
+npx playwright test --project=signup-tests
+
+# Transaction tests (with setup)
+npx playwright test --project=transaction-tests
+
+# Multiple project types
+npx playwright test --project=auth-tests --project=signup-tests --project=transaction-tests
 ```
 
 ### Run Specific Test Files
@@ -310,13 +333,25 @@ export default defineConfig({
   projects: [
     {
       name: 'setup',
-      testMatch: /.*\.setup\.ts/,
+      testMatch: /.*transaction\.setup\.ts/,
     },
     {
-      name: 'chromium',
+      name: 'auth-tests',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: /.*\.setup\.ts/,
-      dependencies: ['setup'],
+      testMatch: /.*auth\.spec\.ts/,
+      dependencies: [], // No setup required
+    },
+    {
+      name: 'signup-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*signup\.spec\.ts/,
+      dependencies: [], // No setup required
+    },
+    {
+      name: 'transaction-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*transactions\.spec\.ts/,
+      dependencies: ['setup'], // Setup required
     },
   ],
 });
