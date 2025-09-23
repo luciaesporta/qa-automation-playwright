@@ -55,16 +55,9 @@ testReceivesMoneyUser('TC3 - Verify user receives money from another user', asyn
   testReceivesMoneyUser('TC4 - Verify money transfer via API', async ({ page, request }) => {
     const emailSentUser = await getUserEmailFromFile('playwright/.senderMoneyUser.data.json');
     const jwt = await getJwtFromStorage('playwright/.senderMoneyUser.json');
-  
-    const api = new ApiUtils(request);
-    const randomAmount = Math.floor(Math.random() * 100) + 1;
-  
-    await api.transferMoneyFromFirstAccount(jwt, TestData.receiverMoney.email, randomAmount);
-  
-    await page.reload();
-    await page.waitForLoadState('networkidle');
-  
-    await pageDashboard.expectTransferVisible(emailSentUser, randomAmount);
+    const randomAmount = PageDashboard.generateRandomAmount();
+    await pageDashboard.transferMoneyViaAPI(request, jwt, TestData.receiverMoney.email, randomAmount);
+    await pageDashboard.verifyTransferOnDashboard(emailSentUser, randomAmount);
   });
   
 

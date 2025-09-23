@@ -1,6 +1,7 @@
-import {Page, Locator, expect} from '@playwright/test';
+import {Page, Locator, expect, APIRequestContext} from '@playwright/test';
 import { Routes } from '../support/routes';
 import { ModalCreateBankAccount } from './modalCreateBankAccount';
+import { ApiUtils } from '../utils/apiUtils';
 
 export class PageDashboard {
     readonly page: Page;
@@ -65,5 +66,23 @@ export class PageDashboard {
       new RegExp(String(amount.toFixed(2)))
     );
   }
-  
-   }
+
+  async transferMoneyViaAPI(request: APIRequestContext, jwt: string, recipientEmail: string, amount: number) {
+    const api = new ApiUtils(request);
+    return await api.transferMoneyFromFirstAccount(jwt, recipientEmail, amount);
+  }
+
+  async refreshDashboardAndWait() {
+    await this.page.reload();
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  async verifyTransferOnDashboard(senderEmail: string, amount: number) {
+    await this.refreshDashboardAndWait();
+    await this.expectTransferVisible(senderEmail, amount);
+  }
+
+ static generateRandomAmount(minAmount: number = 1, maxAmount: number = 100): number {
+    return Math.floor(Math.random() * (maxAmount - minAmount + 1)) + minAmount;
+  }
+     }
