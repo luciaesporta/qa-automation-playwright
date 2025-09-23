@@ -13,15 +13,28 @@ export default defineConfig({
   projects: [
     {
       name: 'setup',
-      testMatch: /.*\.setup\.ts/,
+      testMatch: /.*transaction\.setup\.ts/,
     },
 
     {
-      name: 'chromium',
+      name: 'auth-tests',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: /.*\.setup\.ts/,
-      dependencies: ['setup'],
-  
+      testMatch: /.*auth\.spec\.ts/,
+      dependencies: [], 
+    },
+
+    {
+      name: 'signup-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*signup\.spec\.ts/,
+      dependencies: [],
+    },
+
+    {
+      name: 'transaction-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*transactions\.spec\.ts/,
+      dependencies: ['setup'], 
     },
   ],
 });

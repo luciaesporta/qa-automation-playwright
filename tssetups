@@ -1,0 +1,6 @@
+pages/pageDashboard.ts
+playwright/.newUserWithBankAccount.json
+playwright/.receiverMoneyUser.json
+playwright/.senderMoneyUser.data.json
+playwright/.senderMoneyUser.json
+tests/transactions.spec.ts
