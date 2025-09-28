@@ -3,6 +3,7 @@ import { PageAuth } from '../pages/pageAuth';
 import { PageDashboard } from '../pages/pageDashboard';
 import { ModalCreateBankAccount } from '../pages/modalCreateBankAccount';
 import { BackendUtils } from '../utils/backendUtils';
+import { Logger } from '../utils/Logger';
 import TestData from '../data/testData.json';
 import fs from 'fs/promises';
 import path from 'path';
@@ -46,9 +47,13 @@ setup ('Creates user via API and sends money', async ({page, request}) => {
     const accountCreated = await pageDashboard.createBankAccount('Débito', '1000');
     
     if (accountCreated) {
-      console.log('Bank account created successfully for new user');
+      Logger.info('Bank account created successfully for new user', { 
+        testName: 'Create new user with bank account for testing' 
+      });
     } else {
-      console.log('Bank account creation skipped - button not visible');
+      Logger.warn('Bank account creation skipped - button not visible', { 
+        testName: 'Create new user with bank account for testing' 
+      });
     }
     
     await page.context().storageState({path: newUserWithBankAccountAuthFile});
