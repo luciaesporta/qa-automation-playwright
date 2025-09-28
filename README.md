@@ -26,6 +26,24 @@ This project provides automated testing for the Athena Bank Fintech application,
 - **Money Transfers**: Sending and receiving money between users
 - **API Testing**: Independent backend API validation and response verification (decoupled from frontend)
 
+## 🎬 Demo Animations
+
+Here are some .gif recordings showcasing key user flows in the Athena Bank app:
+
+- **Signup:**
+
+  <img src="https://github.com/user-attachments/assets/fc02f395-0b4c-4ba1-a2fe-f7fccb0010a7" alt="sign up test cases" width="600"/>
+
+- **Authentication:** Login workflow
+
+  <img src="https://github.com/user-attachments/assets/a4f26876-1345-4fee-8a29-73a9ba3fa61a" alt="auth test cases" width="600"/>
+
+- **Transactions:** Sending and receiving money
+
+  <img src="https://github.com/user-attachments/assets/2dde0610-c005-4672-9758-3cf31ec2fc60" alt="transactions test cases" width="600"/>
+
+
+
 ## ✨ Features
 
 - 🔧 **Page Object Model**: Maintainable and reusable test code
