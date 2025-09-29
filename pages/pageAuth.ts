@@ -1,6 +1,8 @@
 import {Page, Locator, expect} from '@playwright/test';
 import { PageDashboard } from './pageDashboard';
 import { Routes } from '../support/routes';
+import { Logger } from '../utils/Logger';
+import { TestHelpers } from '../utils/TestHelpers';
 
 export class PageAuth{
     readonly page: Page;
@@ -26,17 +28,21 @@ export class PageAuth{
     }
 
     async visitLoginPage(){
+        Logger.step('Navigate to login page', { url: Routes.login });
+        await TestHelpers.waitForPageLoad(this.page);
         await this.page.goto(Routes.login);
-        await this.page.waitForLoadState('domcontentloaded');
+        await TestHelpers.waitForPageLoad(this.page);
     }
    
      async completeLoginForm(email: string, password: string){
-        await this.emailInput.fill(email);
-        await this.passwordInput.fill(password);
+        Logger.step('Complete login form', { email: email.substring(0, 10) + '...' });
+        await TestHelpers.safeFillInput(this.emailInput, email, { field: 'email' });
+        await TestHelpers.safeFillInput(this.passwordInput, password, { field: 'password' });
     }
     
     async clickLoginButton(){
-        await this.buttonLogIn.click();
+        Logger.step('Click login button');
+        await TestHelpers.safeClick(this.buttonLogIn, { action: 'login' });
     }
     async loginSuccessfully(email: string, password: string){
         await this.completeLoginForm(email,password);

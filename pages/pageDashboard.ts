@@ -4,6 +4,7 @@ import { ModalCreateBankAccount } from './modalCreateBankAccount';
 import { ApiUtils } from '../utils/apiUtils';
 import { ENV, ConfigHelpers, TEST_DATA } from '../config/environment';
 import { Logger } from '../utils/Logger';
+import { TestHelpers } from '../utils/TestHelpers';
 
 export class PageDashboard {
     readonly page: Page;
@@ -27,15 +28,17 @@ export class PageDashboard {
     }
 
     async visitDashboardPage(){
+        Logger.step('Navigate to dashboard page', { url: Routes.dashboard });
         await this.page.goto(Routes.dashboard);
-        await this.page.waitForLoadState('domcontentloaded');
+        await TestHelpers.waitForPageLoad(this.page);
     }
 
     async logout() {
-    await this.buttonLogOut.click();
-    await this.page.waitForURL(Routes.login);
-    await expect(this.page).toHaveURL(Routes.login);
-  }
+        Logger.step('Execute logout');
+        await TestHelpers.safeClick(this.buttonLogOut, { action: 'logout' });
+        await TestHelpers.waitForNavigation(this.page, Routes.login);
+        await expect(this.page).toHaveURL(Routes.login);
+    }
 
   async createBankAccount(accountType: string, balance: string): Promise<boolean> {
     try {
@@ -74,10 +77,11 @@ export class PageDashboard {
     return await api.transferMoneyFromFirstAccount(jwt, recipientEmail, amount);
   }
 
-  async refreshDashboardAndWait() {
-    await this.page.reload();
-    await this.page.waitForLoadState('networkidle');
-  }
+    async refreshDashboardAndWait() {
+        Logger.step('Refresh dashboard and wait for network idle');
+        await this.page.reload();
+        await TestHelpers.waitForNetworkIdle(this.page);
+    }
 
   async verifyTransferOnDashboard(senderEmail: string, amount: number) {
     await this.refreshDashboardAndWait();
