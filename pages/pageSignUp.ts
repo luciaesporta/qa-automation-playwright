@@ -1,5 +1,7 @@
 import {Page, Locator, APIRequestContext, expect} from '@playwright/test';
 import { Routes, ApiRoutes } from '../support/routes';
+import { ENV, ConfigHelpers, API_ENDPOINTS, TEST_DATA } from '../config/environment';
+import { Logger } from '../utils/Logger';
 
 export class PageSignUp{
     readonly page: Page;
@@ -22,7 +24,9 @@ export class PageSignUp{
         this.buttonSignUp = page.getByTestId('boton-registrarse'); 
         this.messageCreationAccount = 'Registro exitoso!';
         this.messageEmailAlreadyUsed = 'Email already in use';
-        this.apiEndpoint = `http://localhost:6007${ApiRoutes.signup}`;
+        this.apiEndpoint = ConfigHelpers.getApiEndpoint(API_ENDPOINTS.AUTH.SIGNUP);
+        
+        Logger.debug('PageSignUp initialized', { apiEndpoint: this.apiEndpoint });
     }
    
     async visitSignUpPage() {

@@ -1,11 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
+import { ENV, ConfigHelpers } from './config/environment';
 
 export default defineConfig({
   testDir: './tests',
   reporter: 'html',
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    baseURL: ENV.baseUrl,
     trace: 'on-first-retry',
+    actionTimeout: ConfigHelpers.getTimeout('elementVisible'),
+    navigationTimeout: ConfigHelpers.getTimeout('pageLoad'),
   },
 
   testMatch: /.*\.(spec|test)\.(ts|js|mjs)/,
