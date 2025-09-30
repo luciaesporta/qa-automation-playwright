@@ -2,19 +2,34 @@ import { APIRequestContext, expect } from '@playwright/test';
 import { ENV, ConfigHelpers, API_ENDPOINTS } from '../config/environment';
 import { Logger } from './Logger';
 import { TestHelpers } from './TestHelpers';
+import { 
+  UserData, 
+  BankAccount, 
+  Transaction, 
+  AccountsListResponse, 
+  TransferResponse,
+  ApiClientConfig 
+} from '../types';
 
 export class ApiUtils {
   private request: APIRequestContext;
   private baseUrl: string;
+  private config: ApiClientConfig;
   
 
-  constructor(request: APIRequestContext, baseUrl?: string) {
+  constructor(request: APIRequestContext, baseUrl?: string, config?: Partial<ApiClientConfig>) {
     this.request = request;
     this.baseUrl = baseUrl || ENV.apiUrl;
-    Logger.debug('ApiUtils initialized', { baseUrl: this.baseUrl });
+    this.config = {
+      baseUrl: this.baseUrl,
+      timeout: ConfigHelpers.getTimeout('apiRequest'),
+      retries: ConfigHelpers.getRetries('api'),
+      ...config
+    };
+    Logger.debug('ApiUtils initialized', { baseUrl: this.baseUrl, config: this.config });
   }
 
-  async getAccounts(jwt: string) {
+  async getAccounts(jwt: string): Promise<BankAccount[]> {
     const endpoint = ConfigHelpers.getApiEndpoint(API_ENDPOINTS.ACCOUNTS.LIST);
     
     return TestHelpers.waitForApiResponse(
@@ -44,7 +59,7 @@ export class ApiUtils {
     );
   }
 
-  async transferMoney(jwt: string, fromAccountId: string, toEmail: string, amount: number) {
+  async transferMoney(jwt: string, fromAccountId: string, toEmail: string, amount: number): Promise<Transaction> {
     const endpoint = ConfigHelpers.getApiEndpoint(API_ENDPOINTS.TRANSACTIONS.TRANSFER);
     
     return TestHelpers.waitForApiResponse(
@@ -75,7 +90,7 @@ export class ApiUtils {
     );
   }
 
-  async transferMoneyFromFirstAccount(jwt: string, toEmail: string, amount: number) {
+  async transferMoneyFromFirstAccount(jwt: string, toEmail: string, amount: number): Promise<Transaction> {
     const accounts = await this.getAccounts(jwt);
     expect(accounts.length, 'No accounts found').toBeGreaterThan(0);
     const idOriginAccount = accounts[0]._id;

@@ -1,44 +1,18 @@
-/**
- * Centralized environment configuration for Playwright tests
- * All URLs, timeouts, and environment-specific settings are managed here
- */
+import { TimeoutConfig, RetryConfig, TestDataConfig } from '../types';
 
 export interface EnvironmentConfig {
   baseUrl: string;
   apiUrl: string;
-  timeouts: {
-    default: number;
-    short: number;
-    long: number;
-    networkIdle: number;
-    elementVisible: number;
-    pageLoad: number;
-  };
-  retries: {
-    api: number;
-    element: number;
-    navigation: number;
-  };
-  testData: {
-    defaultBalance: string;
-    defaultAccountType: string;
-    transferAmounts: {
-      min: number;
-      max: number;
-      default: number;
-    };
-  };
+  timeouts: TimeoutConfig;
+  retries: RetryConfig;
+  testData: TestDataConfig;
 }
 
-/**
- * Environment configuration based on environment variables or defaults
- */
+
 export const ENV: EnvironmentConfig = {
-  // Base URLs
   baseUrl: process.env.BASE_URL || 'http://localhost:3000',
   apiUrl: process.env.API_URL || 'http://localhost:6007/api',
 
-  // Timeout configurations
   timeouts: {
     default: parseInt(process.env.TEST_TIMEOUT || '30000'),
     short: parseInt(process.env.SHORT_TIMEOUT || '5000'),
@@ -48,14 +22,12 @@ export const ENV: EnvironmentConfig = {
     pageLoad: parseInt(process.env.PAGE_LOAD_TIMEOUT || '30000'),
   },
 
-  // Retry configurations
   retries: {
     api: parseInt(process.env.API_RETRIES || '3'),
     element: parseInt(process.env.ELEMENT_RETRIES || '3'),
     navigation: parseInt(process.env.NAVIGATION_RETRIES || '2'),
   },
 
-  // Test data defaults
   testData: {
     defaultBalance: process.env.DEFAULT_BALANCE || '1000',
     defaultAccountType: process.env.DEFAULT_ACCOUNT_TYPE || 'Débito',
@@ -67,49 +39,34 @@ export const ENV: EnvironmentConfig = {
   },
 };
 
-/**
- * Helper functions for common configuration access
- */
+
 export const ConfigHelpers = {
-  /**
-   * Get full API endpoint URL
-   */
+
   getApiEndpoint: (endpoint: string): string => {
     return `${ENV.apiUrl}${endpoint}`;
   },
 
-  /**
-   * Get timeout with fallback
-   */
+
   getTimeout: (type: keyof EnvironmentConfig['timeouts'], fallback?: number): number => {
     return ENV.timeouts[type] || fallback || ENV.timeouts.default;
   },
 
-  /**
-   * Get retry count with fallback
-   */
+
   getRetries: (type: keyof EnvironmentConfig['retries'], fallback?: number): number => {
     return ENV.retries[type] || fallback || 3;
   },
 
-  /**
-   * Check if running in CI environment
-   */
   isCI: (): boolean => {
     return process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
   },
 
-  /**
-   * Check if running in debug mode
-   */
+
   isDebug: (): boolean => {
     return process.env.DEBUG === 'true' || process.env.NODE_ENV === 'development';
   },
 };
 
-/**
- * API Endpoints configuration
- */
+
 export const API_ENDPOINTS = {
   AUTH: {
     SIGNUP: '/auth/signup',
@@ -128,9 +85,7 @@ export const API_ENDPOINTS = {
   },
 } as const;
 
-/**
- * Test Data Configuration
- */
+
 export const TEST_DATA = {
   USERS: {
     VALID: {
