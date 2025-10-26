@@ -18,5 +18,19 @@
   "lastName": "Receiver",
   "email": "luciaalvarezesporta+moneyreceiver@gmail.com",
   "password": "12345678"
+},
+
+"freezeTestUser": {
+  "firstName": "Freeze",
+  "lastName": "Test",
+  "email": "luciaalvarezesporta+freezetest@gmail.com",
+  "password": "12345678"
+},
+
+"unfreezeTestUser": {
+  "firstName": "Unfreeze",
+  "lastName": "Test", 
+  "email": "luciaalvarezesporta+unfreezetest@gmail.com",
+  "password": "12345678"
 }
 }

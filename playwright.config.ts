@@ -46,5 +46,12 @@ export default defineConfig({
       testMatch: /.*funding\.test\.ts$/,
       dependencies: [], 
     },
+
+    {
+      name: 'freeze-account-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*freezeAccount\.test\.ts$/,
+      dependencies: [], 
+    },
   ],
 });
