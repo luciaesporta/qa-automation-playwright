@@ -11,9 +11,7 @@ export interface EnvironmentConfig {
   logLevel: 'debug' | 'info' | 'warn' | 'error';
 }
 
-/**
- * Timeout configuration interface
- */
+
 export interface TimeoutConfig {
   default: number;
   elementVisible: number;
@@ -25,9 +23,7 @@ export interface TimeoutConfig {
   long: number;
 }
 
-/**
- * Retry configuration interface
- */
+
 export interface RetryConfig {
   element: number;
   api: number;
@@ -35,9 +31,7 @@ export interface RetryConfig {
   default?: number;
 }
 
-/**
- * API endpoints configuration
- */
+
 export interface ApiEndpointsConfig {
   auth: {
     signup: string;
@@ -62,9 +56,7 @@ export interface ApiEndpointsConfig {
   };
 }
 
-/**
- * Browser configuration interface
- */
+
 export interface BrowserConfig {
   headless: boolean;
   slowMo: number;
@@ -78,9 +70,7 @@ export interface BrowserConfig {
   timezone?: string;
 }
 
-/**
- * Test configuration interface
- */
+
 export interface TestConfig {
   timeout: TimeoutConfig;
   retry: RetryConfig;
@@ -94,9 +84,7 @@ export interface TestConfig {
   traceOnFailure: boolean;
 }
 
-/**
- * Playwright configuration interface
- */
+
 export interface PlaywrightConfig {
   testDir: string;
   testMatch: string[];
@@ -119,9 +107,7 @@ export interface PlaywrightConfig {
   projects: ProjectConfig[];
 }
 
-/**
- * Project configuration interface
- */
+
 export interface ProjectConfig {
   name: string;
   testMatch: string[];
@@ -132,9 +118,7 @@ export interface ProjectConfig {
   retries?: number;
 }
 
-/**
- * Database configuration interface
- */
+
 export interface DatabaseConfig {
   host: string;
   port: number;
@@ -146,9 +130,7 @@ export interface DatabaseConfig {
   queryTimeout: number;
 }
 
-/**
- * Redis configuration interface
- */
+
 export interface RedisConfig {
   host: string;
   port: number;
@@ -158,9 +140,7 @@ export interface RedisConfig {
   commandTimeout: number;
 }
 
-/**
- * Logging configuration interface
- */
+
 export interface LoggingConfig {
   level: 'debug' | 'info' | 'warn' | 'error';
   format: 'json' | 'text';
@@ -172,9 +152,7 @@ export interface LoggingConfig {
   includeLevel: boolean;
 }
 
-/**
- * Security configuration interface
- */
+
 export interface SecurityConfig {
   jwtSecret: string;
   jwtExpiration: number;
@@ -185,9 +163,7 @@ export interface SecurityConfig {
   httpsOnly: boolean;
 }
 
-/**
- * Feature flags configuration
- */
+
 export interface FeatureFlagsConfig {
   enableApiTesting: boolean;
   enableUiTesting: boolean;
@@ -199,9 +175,7 @@ export interface FeatureFlagsConfig {
   enableReporting: boolean;
 }
 
-/**
- * Complete configuration interface
- */
+
 export interface CompleteConfig {
   environment: EnvironmentConfig;
   timeouts: TimeoutConfig;
@@ -217,9 +191,7 @@ export interface CompleteConfig {
   featureFlags: FeatureFlagsConfig;
 }
 
-/**
- * Configuration validation result
- */
+
 export interface ConfigValidationResult {
   isValid: boolean;
   errors: string[];
@@ -227,9 +199,7 @@ export interface ConfigValidationResult {
   validatedAt: string;
 }
 
-/**
- * Configuration loader options
- */
+
 export interface ConfigLoaderOptions {
   configPath?: string;
   environment?: string;

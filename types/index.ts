@@ -1,16 +1,16 @@
 // Page Object interfaces
 export * from './pageObjects';
 
-// API types
+
 export * from './api';
 
-// Test data types
+
 export * from './testData';
 
-// Configuration types
+
 export * from './config';
 
-// Re-export commonly used types for convenience
+
 export type {
   BasePageInterface,
   AuthPageInterface,

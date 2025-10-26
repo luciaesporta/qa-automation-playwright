@@ -39,5 +39,12 @@ export default defineConfig({
       testMatch: /.*transactions\.spec\.ts/,
       dependencies: ['setup'], 
     },
+
+    {
+      name: 'funding-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*funding\.test\.ts$/,
+      dependencies: [], 
+    },
   ],
 });

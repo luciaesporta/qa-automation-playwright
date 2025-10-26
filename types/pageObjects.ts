@@ -1,15 +1,10 @@
 import { Page, Locator } from '@playwright/test';
 
-/**
- * Base interface for all Page Objects
- */
 export interface BasePageInterface {
   readonly page: Page;
 }
 
-/**
- * Interface for authentication page operations
- */
+
 export interface AuthPageInterface extends BasePageInterface {
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
@@ -24,9 +19,7 @@ export interface AuthPageInterface extends BasePageInterface {
   loginWithInvalidCredentials(email: string, password: string): Promise<void>;
 }
 
-/**
- * Interface for dashboard page operations
- */
+
 export interface DashboardPageInterface extends BasePageInterface {
   readonly buttonAddAccount: Locator;
   readonly dashboardTitle: Locator;
@@ -46,9 +39,7 @@ export interface DashboardPageInterface extends BasePageInterface {
   generateRandomAmount(minAmount?: number, maxAmount?: number): number;
 }
 
-/**
- * Interface for signup page operations
- */
+
 export interface SignupPageInterface extends BasePageInterface {
   readonly nameInput: Locator;
   readonly lastNameInput: Locator;
@@ -69,18 +60,14 @@ export interface SignupPageInterface extends BasePageInterface {
   generateUniqueEmail(baseEmail: string): string;
 }
 
-/**
- * Interface for modal operations
- */
+
 export interface ModalInterface extends BasePageInterface {
   // Common modal operations can be defined here
   close(): Promise<void>;
   isVisible(): Promise<boolean>;
 }
 
-/**
- * Interface for bank account creation modal
- */
+
 export interface BankAccountModalInterface extends ModalInterface {
   readonly accountTypeCombobox: Locator;
   readonly balanceInput: Locator;
@@ -92,9 +79,7 @@ export interface BankAccountModalInterface extends ModalInterface {
   cancelAccountCreation(): Promise<void>;
 }
 
-/**
- * Interface for money transfer modal
- */
+
 export interface TransferModalInterface extends ModalInterface {
   readonly recipientEmailInput: Locator;
   readonly fromAccountCombobox: Locator;

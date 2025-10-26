@@ -9,9 +9,7 @@ export interface BaseApiResponse<T = any> {
   status: number;
 }
 
-/**
- * User data structure for API responses
- */
+
 export interface UserData {
   _id: string;
   firstName: string;
@@ -22,9 +20,7 @@ export interface UserData {
   updatedAt?: string;
 }
 
-/**
- * Bank account data structure
- */
+
 export interface BankAccount {
   _id: string;
   userId: string;
@@ -34,18 +30,14 @@ export interface BankAccount {
   updatedAt?: string;
 }
 
-/**
- * Account types enumeration
- */
+
 export enum AccountType {
   DEBIT = 'Débito',
   CREDIT = 'Crédito',
   SAVINGS = 'Ahorros'
 }
 
-/**
- * Transaction data structure
- */
+
 export interface Transaction {
   _id: string;
   fromAccountId: string;
@@ -57,9 +49,7 @@ export interface Transaction {
   updatedAt?: string;
 }
 
-/**
- * Transaction status enumeration
- */
+
 export enum TransactionStatus {
   PENDING = 'pending',
   COMPLETED = 'completed',
@@ -67,9 +57,7 @@ export enum TransactionStatus {
   CANCELLED = 'cancelled'
 }
 
-/**
- * Transfer request payload
- */
+
 export interface TransferRequest {
   fromAccountId: string;
   toEmail: string;
@@ -77,16 +65,12 @@ export interface TransferRequest {
   description?: string;
 }
 
-/**
- * Transfer response
- */
+
 export interface TransferResponse extends BaseApiResponse<Transaction> {
   data: Transaction;
 }
 
-/**
- * Signup request payload
- */
+
 export interface SignupRequest {
   firstName: string;
   lastName: string;
@@ -94,24 +78,18 @@ export interface SignupRequest {
   password: string;
 }
 
-/**
- * Signup response
- */
+
 export interface SignupResponse extends BaseApiResponse<UserData> {
   data: UserData;
 }
 
-/**
- * Login request payload
- */
+
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
-/**
- * Login response
- */
+
 export interface LoginResponse extends BaseApiResponse<{
   user: UserData;
   token: string;
@@ -122,16 +100,12 @@ export interface LoginResponse extends BaseApiResponse<{
   };
 }
 
-/**
- * Accounts list response
- */
+
 export interface AccountsListResponse extends BaseApiResponse<BankAccount[]> {
   data: BankAccount[];
 }
 
-/**
- * API error response
- */
+
 export interface ApiErrorResponse {
   success: false;
   error: string;
@@ -140,9 +114,7 @@ export interface ApiErrorResponse {
   details?: any;
 }
 
-/**
- * API endpoint configuration
- */
+
 export interface ApiEndpoint {
   path: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
@@ -150,9 +122,7 @@ export interface ApiEndpoint {
   timeout?: number;
 }
 
-/**
- * API client configuration
- */
+
 export interface ApiClientConfig {
   baseUrl: string;
   timeout: number;
@@ -160,9 +130,7 @@ export interface ApiClientConfig {
   headers?: Record<string, string>;
 }
 
-/**
- * Request context for API calls
- */
+
 export interface ApiRequestContext {
   jwt?: string;
   userId?: string;

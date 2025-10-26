@@ -2,14 +2,10 @@ import { Page, Locator, APIRequestContext, expect } from '@playwright/test';
 import { ConfigHelpers } from '../config/environment';
 import { Logger } from './Logger';
 
-/**
- * Utility class for common test operations with robust error handling
- * Provides retry logic, timeout management, and error recovery
- */
+
 export class TestHelpers {
-  /**
-   * Wait for network to be idle with configurable timeout
-   */
+
+
   static async waitForNetworkIdle(
     page: Page, 
     timeout?: number,
@@ -31,9 +27,7 @@ export class TestHelpers {
     }
   }
 
-  /**
-   * Wait for page to load completely with all resources
-   */
+
   static async waitForPageLoad(
     page: Page, 
     timeout?: number,
@@ -56,9 +50,7 @@ export class TestHelpers {
     }
   }
 
-  /**
-   * Wait for element to be visible with retry logic
-   */
+
   static async waitForElementVisible(
     selector: Locator,
     timeout?: number,
@@ -90,15 +82,12 @@ export class TestHelpers {
           throw error;
         }
         
-        // Exponential backoff
         await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
       }
     }
   }
 
-  /**
-   * Retry operation with configurable retry count and backoff
-   */
+
   static async retryOperation<T>(
     operation: () => Promise<T>,
     maxRetries?: number,
@@ -137,9 +126,7 @@ export class TestHelpers {
     throw lastError!;
   }
 
-  /**
-   * Wait for API response with retry logic
-   */
+
   static async waitForApiResponse<T>(
     apiCall: () => Promise<T>,
     maxRetries?: number,
@@ -152,14 +139,12 @@ export class TestHelpers {
     return this.retryOperation(
       apiCall,
       retries,
-      2000, // 2 second base backoff for API calls
+      2000, 
       { ...context, operationType: 'api' }
     );
   }
 
-  /**
-   * Safe element interaction with retry
-   */
+
   static async safeElementAction(
     action: () => Promise<void>,
     selector: Locator,
@@ -181,9 +166,7 @@ export class TestHelpers {
     Logger.debug(`Safe element action completed: ${actionName}`, context);
   }
 
-  /**
-   * Fill input with validation and retry
-   */
+
   static async safeFillInput(
     selector: Locator,
     value: string,
@@ -194,7 +177,6 @@ export class TestHelpers {
         await selector.clear();
         await selector.fill(value);
         
-        // Verify the value was set correctly
         const actualValue = await selector.inputValue();
         if (actualValue !== value) {
           throw new Error(`Input value mismatch. Expected: "${value}", Actual: "${actualValue}"`);
@@ -211,9 +193,7 @@ export class TestHelpers {
     );
   }
 
-  /**
-   * Click element with retry and validation
-   */
+
   static async safeClick(
     selector: Locator,
     context?: Record<string, any>
@@ -229,9 +209,7 @@ export class TestHelpers {
     );
   }
 
-  /**
-   * Wait for navigation with timeout
-   */
+
   static async waitForNavigation(
     page: Page,
     urlPattern: string | RegExp,
@@ -263,9 +241,7 @@ export class TestHelpers {
     }
   }
 
-  /**
-   * Take screenshot with automatic naming
-   */
+
   static async takeScreenshot(
     page: Page,
     name: string,
@@ -288,9 +264,7 @@ export class TestHelpers {
     }
   }
 
-  /**
-   * Handle API errors with detailed logging
-   */
+
   static async handleApiError(
     error: any,
     endpoint: string,
@@ -311,9 +285,7 @@ export class TestHelpers {
     throw new Error(`${errorMessage}: ${error.message}`);
   }
 
-  /**
-   * Check if element exists without throwing
-   */
+
   static async elementExists(selector: Locator, timeout?: number): Promise<boolean> {
     const timeoutMs = timeout || 5000;
     
@@ -325,9 +297,7 @@ export class TestHelpers {
     }
   }
 
-  /**
-   * Wait for multiple elements to be visible
-   */
+
   static async waitForMultipleElements(
     selectors: Locator[],
     timeout?: number,
