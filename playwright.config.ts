@@ -53,5 +53,12 @@ export default defineConfig({
       testMatch: /.*freezeAccount\.test\.ts$/,
       dependencies: [], 
     },
+
+    {
+      name: 'bank-accounts-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*bankAccounts\.test\.ts$/,
+      dependencies: [], 
+    },
   ],
 });

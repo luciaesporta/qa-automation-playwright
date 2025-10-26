@@ -38,7 +38,6 @@ test('TC2 - Unfreeze account successfully', async ({ pageAuth, pageDashboard, pa
     const modalFreezeAccount = new ModalFreezeAccount(page);
     const modalCreateBankAccount = new ModalCreateBankAccount(page);
     const pageSignUp = new PageSignUp(page);
-    
     const timestamp = Date.now();
     const unfreezeUser = {
         firstName: "Unfreeze",
@@ -51,10 +50,8 @@ test('TC2 - Unfreeze account successfully', async ({ pageAuth, pageDashboard, pa
     
     await page.goto('/signup');
     await pageSignUp.signUpUser(unfreezeUser.firstName, unfreezeUser.lastName, unfreezeUser.email, unfreezeUser.password);
-    
     await pageAuth.loginSuccessfully(unfreezeUser.email, unfreezeUser.password);
     await pageDashboard.visitDashboardPage();
-    
     await pageDashboard.createBankAccount("Débito", "1000");
     await modalFreezeAccount.freezeAccount();
     await modalFreezeAccount.unfreezeAccount();
