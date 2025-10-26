@@ -1,4 +1,6 @@
 import { test, expect } from '../fixtures/PageFixtures';
+import { Routes } from '../support/routes';
+import { PageDashboard } from '../pages/pageDashboard';
 import { Logger } from '../utils/Logger';
 
 test.beforeEach(async ({ pageAuth }) => {
@@ -46,4 +48,12 @@ test('TC6 - Login fails with invalid email', async ({ pageAuth }) => {
   Logger.info('Invalid email format test completed successfully');
 });
 
+test('TC7 - Logout successfully', async ({ pageAuth, pageDashboard }) => {
+  Logger.step('Test logout successfully', { testName: 'TC7 - Logout successfully' });
+  await pageAuth.loginSuccessfully("luciaalvarezesporta@gmail.com", "12345678");
+  await pageDashboard.visitDashboardPage();
+  await pageAuth.logout();
+  await expect(pageAuth.buttonLogIn).toBeVisible();
+  Logger.info('Logout test completed successfully');
+});
 

@@ -1,6 +1,3 @@
-/**
- * Environment configuration interface
- */
 export interface EnvironmentConfig {
   baseUrl: string;
   apiUrl: string;

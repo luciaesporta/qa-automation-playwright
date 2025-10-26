@@ -40,9 +40,7 @@ export type {
   TestUser,
   TestBankAccount,
   TestTransaction,
-  TestDataConfig,
-  TestScenario,
-  GeneratedTestData
+  TestDataConfig
 } from './testData';
 
 export type {

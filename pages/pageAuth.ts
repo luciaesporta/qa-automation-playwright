@@ -13,6 +13,8 @@ export class PageAuth{
     readonly buttonCreateAccount: Locator;
     readonly messageLoginSuccessfull: string;
     readonly messageLoginFails: string;
+    readonly logoutButton: Locator;
+    readonly messageLogoutSuccessfull: string;
  
 
 
@@ -25,6 +27,8 @@ export class PageAuth{
         this.buttonCreateAccount = page.getByTestId('boton-signup-header');
         this.messageLoginSuccessfull = "Inicio de sesión exitoso";
         this.messageLoginFails = "Invalid credentials";
+        this.logoutButton = page.getByTestId('boton-logout');
+        this.messageLogoutSuccessfull = "Sesión cerrada correctamente";
     }
 
     async visitLoginPage(){
@@ -76,7 +80,6 @@ export class PageAuth{
         await expect(emailInput).toHaveJSProperty('validationMessage', 'Please fill out this field.');
         await expect(this.page).toHaveURL(Routes.login);
 }
-//TC9
     async submitIncorrectEmailFormatLoginFormShouldFail(email: string, password: string){
         await this.emailInput.fill(email);
         await this.passwordInput.fill(password);
@@ -87,12 +90,16 @@ export class PageAuth{
 }
 
     async navigationFailsWhenUserIsLoggedout(email: string, password: string) {
-
         await this.loginAndRedirectionToDashboardPage(email, password);
         const pageDashboard = new PageDashboard(this.page);
         await pageDashboard.logout();
         await this.page.goto(Routes.login);
         await expect(this.page).toHaveURL(Routes.login);
 }
+
+    async logout() {
+        await this.logoutButton.click();
+        await expect(this.page.getByText(this.messageLogoutSuccessfull)).toBeVisible();
+    }
 
 }
