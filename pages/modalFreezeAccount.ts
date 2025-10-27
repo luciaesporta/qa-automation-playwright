@@ -17,7 +17,7 @@ constructor(page: Page) {
     this.unfreezeAccountButton = page.getByRole('button', { name: 'Descongelar' }).first();
     this.freezeSuccessMessage = page.getByText('Cuenta congelada ❄️')
     this.modalUnfreezeAccountUnfreezeButton = page.getByRole('button', { name: 'Descongelar' })
-    this.unfreezeSuccessMessage = page.getByText('Cuenta descongelada')
+    this.unfreezeSuccessMessage = page.getByText('Cuenta descongelada ☀️')
 }
 
 async freezeAccount() {
