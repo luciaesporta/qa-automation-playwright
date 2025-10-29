@@ -20,11 +20,13 @@ constructor(page: Page) {
     this.unfreezeSuccessMessage = page.getByText('Cuenta descongelada ☀️')
 }
 
-async freezeAccount() {
-    await this.freezeAccountButton.click();
-    await this.modalFreezeAccountFreezeButton.click();
-    await expect(this.freezeSuccessMessage).toBeVisible();
-}
+    async freezeAccount() {
+        // Wait for freeze button to be visible before clicking
+        await expect(this.freezeAccountButton).toBeVisible({ timeout: 10000 });
+        await this.freezeAccountButton.click();
+        await this.modalFreezeAccountFreezeButton.click();
+        await expect(this.freezeSuccessMessage).toBeVisible();
+    }
 
 async unfreezeAccount() {
     await this.unfreezeAccountButton.click();

@@ -48,11 +48,38 @@ test('TC1 - Freeze account successfully', async ({ page }) => {
     
     Logger.step('Test freeze account successfully', { testName: 'TC1 - Freeze account successfully' });
     
+    // Setup user with bank account
+    await setupUserWithBankAccount(page, pageObjects.pageAuth, pageObjects.pageDashboard, pageObjects.pageSignUp, user);
+    
+    // Wait for page to load and account to be visible
+    await page.waitForLoadState('networkidle');
+    
+    // Test freeze functionality
     await pageObjects.modalFreezeAccount.freezeAccount();
     await expect(pageObjects.modalFreezeAccount.freezeSuccessMessage).toBeVisible();
     
+    Logger.info('Account frozen successfully');
+});
+
+test('TC2 - Unfreeze account successfully', async ({ page }) => {
+    const user = createTestUser('unfreeze');
+    
+    Logger.step('Test unfreeze account successfully', { testName: 'TC2 - Unfreeze account successfully' });
+    
+    // Setup user with bank account
+    await setupUserWithBankAccount(page, pageObjects.pageAuth, pageObjects.pageDashboard, pageObjects.pageSignUp, user);
+    
+    // Wait for page to load and account to be visible
     await page.waitForLoadState('networkidle');
     
+    // First freeze the account
+    await pageObjects.modalFreezeAccount.freezeAccount();
+    await expect(pageObjects.modalFreezeAccount.freezeSuccessMessage).toBeVisible();
+    
+    // Wait for UI state to update properly
+    await page.waitForLoadState('networkidle');
+    
+    // Then test unfreeze
     await pageObjects.modalFreezeAccount.unfreezeAccount();
     await expect(pageObjects.modalFreezeAccount.unfreezeSuccessMessage).toBeVisible();
     
