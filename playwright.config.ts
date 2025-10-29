@@ -4,9 +4,10 @@ import { ENV, ConfigHelpers } from './config/environment';
 export default defineConfig({
   testDir: './tests',
   reporter: 'html',
+  timeout: 60000,
   use: {
     baseURL: ENV.baseUrl,
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     actionTimeout: ConfigHelpers.getTimeout('elementVisible'),
     navigationTimeout: ConfigHelpers.getTimeout('pageLoad'),
   },
