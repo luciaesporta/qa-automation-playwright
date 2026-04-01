@@ -13,12 +13,12 @@ export class ModalFunding {
     constructor(page: Page) {
         this.page = page;
         this.addFundsDashboardButton = this.page.getByTestId('boton-agregar-fondos');
-        this.accountCombobox = this.page.getByRole('combobox', { name: 'Cuenta *' })
-        this.accountComboboxOption = this.page.getByRole('option', { name: '•••• 7575' });
+        this.accountCombobox = this.page.getByRole('combobox', { name: 'Cuenta *' });
+        this.accountComboboxOption = this.page.getByRole('option', { name: '•••• ' });
         this.amountInput = this.page.getByRole('spinbutton', { name: 'Monto' });
         this.addFundsButton = this.page.getByRole('button', { name: 'Agregar fondos' });
         this.successMessage = this.page.getByText('Fondos agregados exitosamente', { exact: false });
-        this.cancelButton = this.page.getByTestId('boton-cancelar-agregar-fondos')
+        this.cancelButton = this.page.getByTestId('boton-cancelar-agregar-fondos');
     }
 
     async addFunds(amount: string) {
@@ -35,6 +35,6 @@ export class ModalFunding {
         await this.accountCombobox.click();
         await this.accountComboboxOption.click();
         await this.cancelButton.click();
-       await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('networkidle');
     }
 }

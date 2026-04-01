@@ -91,6 +91,12 @@ jobs:
           if [ ! -f playwright/.receiverMoneyUser.json ]; then
             echo '{"cookies":[],"origins":[]}' > playwright/.receiverMoneyUser.json
           fi
+          if [ ! -f playwright/.newUserWithBankAccount.json ]; then
+            echo '{"cookies":[],"origins":[]}' > playwright/.newUserWithBankAccount.json
+          fi
+          if [ ! -f playwright/.senderMoneyUser.data.json ]; then
+            echo '{"email":"","password":""}' > playwright/.senderMoneyUser.data.json
+          fi
 
           echo "Running tests with BASE_URL: $BASE_URL"
           npx playwright test --reporter=html
