@@ -1,11 +1,12 @@
 import { APIRequestContext, expect } from "@playwright/test";
 import { PageSignUp } from "../pages/pageSignUp";
+import { ConfigHelpers, API_ENDPOINTS } from "../config/environment";
 
 export class BackendUtils {
   static async createUserViaAPI(request: APIRequestContext, user: any) {
     const email = PageSignUp.generateUniqueEmail(user.email);
 
-    const response = await request.post("http://localhost:6007/api/auth/signup", {
+    const response = await request.post(ConfigHelpers.getApiEndpoint(API_ENDPOINTS.AUTH.SIGNUP), {
       headers: { "Content-Type": "application/json" },
       data: {
         firstName: user.firstName,

@@ -85,36 +85,3 @@ export const API_ENDPOINTS = {
     DEPOSIT: '/transactions/deposit',
   },
 } as const;
-
-
-export const TEST_DATA = {
-  USERS: {
-    VALID: {
-      firstName: 'Lucía',
-      lastName: 'Esporta',
-      email: 'luciaalvarezesporta@gmail.com',
-      password: '12345678',
-    },
-    SENDER: {
-      firstName: 'Money',
-      lastName: 'Sender',
-      email: 'luciaalvarezesporta+moneysender@gmail.com',
-      password: '12345678',
-    },
-    RECEIVER: {
-      firstName: 'Money',
-      lastName: 'Receiver',
-      email: 'luciaalvarezesporta+moneyreceiver@gmail.com',
-      password: '12345678',
-    },
-  },
-  ACCOUNTS: {
-    DEFAULT_TYPE: ENV.testData.defaultAccountType,
-    DEFAULT_BALANCE: ENV.testData.defaultBalance,
-  },
-  TRANSFERS: {
-    MIN_AMOUNT: ENV.testData.transferAmounts.min,
-    MAX_AMOUNT: ENV.testData.transferAmounts.max,
-    DEFAULT_AMOUNT: ENV.testData.transferAmounts.default,
-  },
-} as const;

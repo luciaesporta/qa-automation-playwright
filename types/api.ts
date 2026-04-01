@@ -90,6 +90,18 @@ export interface LoginRequest {
 }
 
 
+/** Flat JSON body returned by POST /api/auth/login */
+export interface LoginSuccessBody {
+  token: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}
+
+
 export interface LoginResponse extends BaseApiResponse<{
   user: UserData;
   token: string;

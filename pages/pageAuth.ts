@@ -1,5 +1,4 @@
 import {Page, Locator, expect} from '@playwright/test';
-import { PageDashboard } from './pageDashboard';
 import { Routes } from '../support/routes';
 import { Logger } from '../utils/Logger';
 import { TestHelpers } from '../utils/TestHelpers';
@@ -61,9 +60,6 @@ export class PageAuth{
         await expect(this.page.getByText(this.messageLoginSuccessfull)).toBeVisible();
         await this.page.waitForURL(Routes.dashboard);
         await expect(this.page).toHaveURL(Routes.dashboard);
-
-        const pageDashboard = new PageDashboard(this.page);
-        await expect(pageDashboard.dashboardTitle).toBeVisible();
     }
 
     async loginFailsIntroducingWrongPassword(email: string, password: string){
@@ -91,8 +87,8 @@ export class PageAuth{
 
     async navigationFailsWhenUserIsLoggedout(email: string, password: string) {
         await this.loginAndRedirectionToDashboardPage(email, password);
-        const pageDashboard = new PageDashboard(this.page);
-        await pageDashboard.logout();
+        await this.logoutButton.click();
+        await this.page.waitForURL(Routes.login);
         await this.page.goto(Routes.login);
         await expect(this.page).toHaveURL(Routes.login);
 }

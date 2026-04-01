@@ -14,7 +14,6 @@ test('TC1 - Sign up successfully via UI', async ({ pageSignUp, page }) => {
   const randomEmail = PageSignUp.generateUniqueEmail(TestData.validUser.email);
   await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, randomEmail, TestData.validUser.password);
   await expect(page.getByText(pageSignUp.messageCreationAccount)).toBeVisible();
-  await page.waitForTimeout(5000);
   Logger.info('UI signup test completed successfully');
 });
 
@@ -40,7 +39,6 @@ test('TC4 -  Sign up fails due to email already registered', async ({ pageSignUp
   Logger.step('Execute signup failure test', { testName: 'TC4 - Sign up fails due to email already registered' });
   await pageSignUp.signUpUser(TestData.validUser.firstName, TestData.validUser.lastName, TestData.validUser.email, TestData.validUser.password);
   await expect(page.getByText(pageSignUp.messageEmailAlreadyUsed)).toBeVisible();
-  await page.waitForTimeout(5000);
   Logger.info('Signup failure test completed successfully');
 });
 

@@ -1,6 +1,6 @@
 import {Page, Locator, APIRequestContext, expect} from '@playwright/test';
 import { Routes, ApiRoutes } from '../support/routes';
-import { ENV, ConfigHelpers, API_ENDPOINTS, TEST_DATA } from '../config/environment';
+import { ConfigHelpers, API_ENDPOINTS } from '../config/environment';
 import { Logger } from '../utils/Logger';
 
 export class PageSignUp{

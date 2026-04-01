@@ -2,7 +2,7 @@ import {Page, Locator, expect, APIRequestContext} from '@playwright/test';
 import { Routes } from '../support/routes';
 import { ModalCreateBankAccount } from './modalCreateBankAccount';
 import { ApiUtils } from '../utils/apiUtils';
-import { ENV, ConfigHelpers, TEST_DATA } from '../config/environment';
+import { ENV } from '../config/environment';
 import { Logger } from '../utils/Logger';
 import { TestHelpers } from '../utils/TestHelpers';
 
@@ -89,8 +89,8 @@ export class PageDashboard {
   }
 
   static generateRandomAmount(
-    minAmount: number = TEST_DATA.TRANSFERS.MIN_AMOUNT, 
-    maxAmount: number = TEST_DATA.TRANSFERS.MAX_AMOUNT
+    minAmount: number = ENV.testData.transferAmounts.min, 
+    maxAmount: number = ENV.testData.transferAmounts.max
   ): number {
     const amount = Math.floor(Math.random() * (maxAmount - minAmount + 1)) + minAmount;
     Logger.debug('Generated random amount', { minAmount, maxAmount, generatedAmount: amount });

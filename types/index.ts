@@ -31,6 +31,7 @@ export type {
   SignupRequest,
   SignupResponse,
   LoginRequest,
+  LoginSuccessBody,
   LoginResponse,
   AccountsListResponse,
   ApiErrorResponse
