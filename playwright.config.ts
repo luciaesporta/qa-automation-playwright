@@ -28,6 +28,13 @@ export default defineConfig({
     },
 
     {
+      name: 'auth-api-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*auth\.api\.spec\.ts/,
+      dependencies: [],
+    },
+
+    {
       name: 'signup-tests',
       use: { ...devices['Desktop Chrome'] },
       testMatch: /.*signup\.spec\.ts/,
