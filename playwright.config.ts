@@ -35,6 +35,13 @@ export default defineConfig({
     },
 
     {
+      name: 'transfer-api-tests',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*transfer\.api\.spec\.ts/,
+      dependencies: [],
+    },
+
+    {
       name: 'signup-tests',
       use: { ...devices['Desktop Chrome'] },
       testMatch: /.*signup\.spec\.ts/,

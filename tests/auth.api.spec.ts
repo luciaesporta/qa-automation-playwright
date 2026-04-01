@@ -64,6 +64,8 @@ test.describe('Auth API - Security', () => {
       if (typeof account.owner._id === 'string') return account.owner._id;
     }
 
+    if (typeof account.user === 'string') return account.user;
+
     if (account.user && typeof account.user === 'object') {
       if (typeof account.user.id === 'string') return account.user.id;
       if (typeof account.user._id === 'string') return account.user._id;

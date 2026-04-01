@@ -90,7 +90,6 @@ export interface LoginRequest {
 }
 
 
-/** Flat JSON body returned by POST /api/auth/login */
 export interface LoginSuccessBody {
   token: string;
   user: {
